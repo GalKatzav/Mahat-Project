@@ -11,9 +11,11 @@ import SearchDonations from "./components/screens/SearchDonations";
 import LogIn from "./components/screens/LogIn";
 import Registertion from "./components/screens/Registertion";
 import NotFound from "./components/screens/NotFound";
+import Footer from "./components/footer/Footer";
 
 ReactDOM.render(
   <BrowserRouter>
+    <Footer />
     <div>
       <Routes>
         <Route path="/" element={<HomePage />} /> {/* Route for Home page */}
