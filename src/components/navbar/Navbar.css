@@ -1,46 +1,57 @@
 .navbar {
-    background-color: rgb(215, 116, 133);
+    background-color: #e6a1a8; /* Adjust the color to match the image */
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
-}
-
-.nav-menu {
+    font-family: 'Arial', sans-serif; /* Adjust the font family as needed */
+  }
+  
+  .nav-menu {
     list-style-type: none;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     gap: 5px;
-    margin: 0; /* Remove default margin */
-    flex-grow: 1; /* Make the menu items expand to fill the available space */
-}
-
-.nav-link {
+    margin: 0;
+    padding: 0; /* Ensure there's no padding affecting the alignment */
+  }
+  
+  .nav-link {
     text-decoration: none;
-    color: black;
-    background-color: cornsilk;
-    justify-content: center;
-    font-weight: bold;
-    padding: 5px 10px; /* Add padding to buttons */
-}
-
-.current-time {
+    color: white; /* Change the text color to white */
+    background-color: #d17485; /* Adjust button background to match the image */
+    border-radius: 20px; /* Round the edges of the buttons */
+    padding: 10px 20px; /* Adjust padding to better fit the content */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+  }
+  
+  .nav-link:hover {
+    background-color: #bb5d6d; /* Darken button background on hover */
+  }
+  
+  .current-time {
     font-size: 18px;
-    color: black;
-    margin-left: 1025px; /* Adjust the margin-left to position the current time */
-
-}
-
-.logo {
+    color: white; /* Change the text color to white */
+    margin-left: auto; /* This will push the current time to the edge */
+    padding-left: 20px; /* Add some padding to not stick to the edge */
+  }
+  
+  .logo {
     display: flex;
     align-items: center;
-    margin-right: auto; /* Move logo to the left */
-}
-
-.logo img {
-    width: 50px;
+  }
+  
+  .logo img {
+    width: 100px; /* Adjust the logo size to match the navbar height */
     height: auto;
-    border-radius: 50%;
-    margin-right: 50px; /* Add some margin between logo and time */
+    margin-right: 10px; /* Adjust spacing to your preference */
+  }
+  
+  /* Add responsiveness - collapse nav-menu items into a dropdown or hide on smaller screens */
+  @media (max-width: 768px) {
+    .nav-menu {
+      display: none;
+      /* Alternatively, you can change this to display:block and style it as a dropdown */
+  }
 }

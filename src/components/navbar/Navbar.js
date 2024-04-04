@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./Navbar.css";
-import logoProject from "../../images/logoProject.jpg"; // Import the logo image
+import icon from "../../images/icon.jpg";
 
 export default function Navbar() {
   const [currentTime, setCurrentTime] = useState(
@@ -22,11 +22,11 @@ export default function Navbar() {
     <div>
       <nav className="navbar">
         <div className="logo">
-          <Link className="icon_nav-item" to="/">
+          <Link to="/" className="nav-link btn btn-outline-secondary">
             <img
-              src={logoProject}
+              src={icon}
               alt="logoProject"
-              style={{ width: "90px", height: "auto" }}
+              style={{ width: "100px", height: "auto" }}
             />
           </Link>
           <span className="current-time">{currentTime}</span>
