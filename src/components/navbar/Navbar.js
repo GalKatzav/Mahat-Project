@@ -37,11 +37,7 @@ export default function Navbar() {
               Home Page
             </a>
           </li>
-          <li className="About_Me_nav-item">
-            <a href="/About_Me" className="nav-link btn btn-outline-secondary">
-              About Me
-            </a>
-          </li>
+
           <li className="Add_Donation_nav-item">
             <a
               href="/Add_Donation"
@@ -58,12 +54,32 @@ export default function Navbar() {
               Donations Search{" "}
             </a>
           </li>
+          <li className="Messages_nav-item">
+            <a href="/Messages" className="nav-link btn btn-outline-secondary">
+              Messages
+            </a>
+          </li>
+          <li className="Setting_nav-item">
+            <a href="/Settings" className="nav-link btn btn-outline-secondary">
+              Setting
+            </a>
+          </li>
+          <li className="About_Me_nav-item">
+            <a href="/About_Me" className="nav-link btn btn-outline-secondary">
+              About Me
+            </a>
+          </li>
           <li className="ConnectUs-nav-item">
             <a
               href="/Connect_Us"
               className="nav-link btn btn-outline-secondary"
             >
               Connect Us{" "}
+            </a>
+          </li>
+          <li className="Rge_Log_nav-item">
+            <a href="/Log_In" className="nav-link btn btn-outline-secondary">
+              Login / Registertion
             </a>
           </li>
         </ul>

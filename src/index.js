@@ -13,6 +13,8 @@ import Registertion from "./components/screens/Registertion";
 import NotFound from "./components/screens/NotFound";
 import Footer from "./components/footer/Footer";
 import Navbar from "./components/navbar/Navbar";
+import Settings from "./components/screens/Settings";
+import Messages from "./components/screens/Messages";
 
 ReactDOM.render(
   <BrowserRouter>
@@ -27,6 +29,8 @@ ReactDOM.render(
         <Route path="/Donations_Search" element={<SearchDonations />} />
         <Route path="/Log_In" element={<LogIn />} />
         <Route path="/Registertion" element={<Registertion />} />
+        <Route path="/Settings" element={<Settings />} />
+        <Route path="/Messages" element={<Messages />} />
         <Route path="*" element={<NotFound />} />{" "}
         {/* Route for handling 404 errors */}
       </Routes>

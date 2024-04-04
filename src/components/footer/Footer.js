@@ -3,11 +3,12 @@ import "./Footer.css";
 
 const Footer = () => {
   const year = new Date().getFullYear();
+  const name = "Adi Sasportas && Gal katzav";
 
   return (
     <footer className="footer">
       <p className="copyright">
-        &copy; {year} Adi Sasportas && Gal katzav All rights reserved.
+        &copy; All rights reserved | {year} | {name}
       </p>
       <div className="link-container">
         <a
