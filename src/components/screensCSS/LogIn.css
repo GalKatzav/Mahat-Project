@@ -1,0 +1,78 @@
+.login-container {
+    display: flex;
+    flex-direction: row; /* Puts text-login on the right and login-form on the left */
+    align-items: flex-start; /* Aligns items to the top */
+    gap: 20px; /* Adds some space between the text and the form */
+    margin: 50px auto; /* Centers the container on the page */
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+}
+
+.text-login {
+    flex-basis: 50%; /* Takes up half of the container width */
+    padding: 10px;
+    /* The rest of your styles here */
+}
+
+.login-form {
+    flex-basis: 50%; /* Takes up the other half of the container width */
+    /* Add any additional styles you need for the form */
+}
+
+.login-form{
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.input-container {
+    margin-bottom: 15px;
+}
+
+.input-container input {
+    width: 75%;
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    
+}
+
+.login-button {
+    width: 35%;
+    padding: 7px;
+    background-color: #d17485;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.reg-button {
+    width: 35%;
+    padding: 7px;
+    background-color: #d17485;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.login-button:hover {
+    opacity: 0.9;
+}
+
+/* Adjustments for smaller screens or additional styles can go here */
+@media (max-width: 768px) {
+    .login-container {
+        flex-direction: column-reverse; /* Stacks the elements on smaller screens */
+    }
+
+    /* Adjust the flex-basis for the children if necessary */
+    .text-login, .login-form {
+        flex-basis: 100%;
+    }
+}
