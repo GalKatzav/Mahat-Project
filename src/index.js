@@ -12,9 +12,11 @@ import LogIn from "./components/screens/LogIn";
 import Registertion from "./components/screens/Registertion";
 import NotFound from "./components/screens/NotFound";
 import Footer from "./components/footer/Footer";
+import Navbar from "./components/navbar/Navbar";
 
 ReactDOM.render(
   <BrowserRouter>
+    <Navbar />
     <Footer />
     <div>
       <Routes>

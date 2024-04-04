@@ -1,0 +1,46 @@
+.navbar {
+    background-color: rgb(215, 116, 133);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+.nav-menu {
+    list-style-type: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    margin: 0; /* Remove default margin */
+    flex-grow: 1; /* Make the menu items expand to fill the available space */
+}
+
+.nav-link {
+    text-decoration: none;
+    color: black;
+    background-color: cornsilk;
+    justify-content: center;
+    font-weight: bold;
+    padding: 5px 10px; /* Add padding to buttons */
+}
+
+.current-time {
+    font-size: 18px;
+    color: black;
+    margin-left: 1025px; /* Adjust the margin-left to position the current time */
+
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    margin-right: auto; /* Move logo to the left */
+}
+
+.logo img {
+    width: 50px;
+    height: auto;
+    border-radius: 50%;
+    margin-right: 50px; /* Add some margin between logo and time */
+}
