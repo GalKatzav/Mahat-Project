@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../screensCSS/Registertion.css";
-// import backroundReg from "../../images/backroundReg.jpg";
+import { firebase } from "../../services/firebase/FireStore";
+import { getDocs, collection, addDoc } from "firebase/firestore"; // Ensure these imports match your Firebase version
 
 const Registertion = () => {
   const [form, setForm] = useState({

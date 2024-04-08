@@ -1,0 +1,54 @@
+body{
+  background-color: antiquewhite;
+}
+
+.main-content {
+    text-align: center;
+    padding: 20px;
+    background-color: #f7d1d3; /* Background color for the main content area */
+    margin-top: 70px;
+  }
+  
+  .main-content h1 {
+    color: #8c2f39; /* Text color for the main header */
+    margin-bottom: 20px;
+  }
+  
+  .content-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px; /* Adjust the space between the items */
+  }
+  
+  .stat {
+    padding: 10px;
+    background-color: #fff; /* White background for the stat blocks */
+    border-radius: 8px;
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.1);
+    width: 200px; /* Adjust width as needed */
+  }
+  
+  .stat p:first-child {
+    font-size: 2em; /* Larger font size for the number */
+    font-weight: bold;
+  }
+  
+  .stat p:last-child {
+    margin-top: 10px; /* Space between the number and description */
+  }
+  
+  .call-to-action button {
+    background-color: #d17485; /* Button color */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 1em;
+    width: 200px; /* Adjust width as needed */
+  }
+  
+  .call-to-action button:hover {
+   opacity: 0.9;
+  }
