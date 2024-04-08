@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "../screensCSS/Registertion.css";
 import { firebase } from "../../services/firebase/FireStore";
-import { getDocs, collection, addDoc } from "firebase/firestore"; // Ensure these imports match your Firebase version
+import { getDocs, collection, addDoc } from "firebase/firestore"; // Ensure these imports match your Firebase version
 
-const Registertion = () => {
+const Registration = () => {
   const [form, setForm] = useState({
     fullName: "",
     userName: "",
@@ -13,6 +13,34 @@ const Registertion = () => {
     phone: "",
   });
 
+  const [users, setUsers] = useState([]);
+  const usersCollectionReference = collection(firebase, "users");
+
+  useEffect(() => {
+    const getUsers = async () => {
+      try {
+        const data = await getDocs(usersCollectionReference);
+        setUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      } catch (e) {
+        console.log("Cannot retrieve data from firebase: " + e);
+      }
+    };
+    getUsers();
+  }, []);
+
+  const createUser = async () => {
+    await addDoc(usersCollectionReference, form);
+    // Optionally, reset the form or fetch users again here
+    setForm({
+      fullName: "",
+      userName: "",
+      password: "",
+      email: "",
+      address: "",
+      phone: "",
+    });
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prevForm) => ({ ...prevForm, [name]: value }));
@@ -20,13 +48,12 @@ const Registertion = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Handle the registration logic here
-    console.log(form);
+    createUser();
+    // Further logic after form submission if necessary
   };
 
   return (
     <div className="registration-container">
-      {/* <img src={backroundReg} alt="backroundReg"></img> */}
       <form className="registration-form" onSubmit={handleSubmit}>
         <h2>Create New User</h2>
         <div className="input-group">
@@ -84,11 +111,11 @@ const Registertion = () => {
           />
         </div>
         <button type="submit" className="save-button">
-          SAVE
+          ADD NEW USER
         </button>
       </form>
     </div>
   );
 };
 
-export default Registertion;
+export default Registration;
