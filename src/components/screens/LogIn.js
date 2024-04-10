@@ -3,14 +3,14 @@ import { useNavigate } from "react-router-dom"; // Import useNavigate for naviga
 import "../screensCSS/LogIn.css"; // Ensure your CSS path is correct
 
 const Login = () => {
-  const [username, setUsername] = useState("");
+  const [userName, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate(); // Initialize the navigation hook
 
   const handleSubmit = (event) => {
     event.preventDefault();
     // Implement your login logic here
-    console.log(username, password);
+    console.log(userName, password);
     // Possibly navigate to another route on successful login
     // navigate('/dashboard'); // Example route on successful login
   };
@@ -27,11 +27,11 @@ const Login = () => {
         <div className="input-container">
           <input
             type="text"
-            id="username"
-            name="username"
-            value={username}
+            id="userName"
+            name="userName"
+            value={userName}
             onChange={(e) => setUsername(e.target.value)}
-            placeholder="Username"
+            placeholder="userName"
             required
           />
         </div>
