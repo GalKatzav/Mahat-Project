@@ -1,5 +1,13 @@
-body{
-  background-color: antiquewhite;
+.HomePage {
+  margin: 0;
+    padding: 0;
+    background-image: url('../../images/backroundReg.jpg'); /* Ensure the path to your image is correct */
+    background-size: cover; /* Cover the entire page */
+    background-position: center; /* Center the background image */
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Full height */
 }
 
 .main-content {

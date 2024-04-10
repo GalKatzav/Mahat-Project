@@ -1,12 +1,15 @@
-body {
+.Registration {
     margin: 0;
     padding: 0;
     background-image: url('../../images/backroundReg.jpg'); /* Ensure the path to your image is correct */
     background-size: cover; /* Cover the entire page */
     background-position: center; /* Center the background image */
-    background-repeat: no-repeat; /* Do not repeat the image */
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
     height: 100vh; /* Full height */
 }
+
 .registration-container {
     max-width: 600px;
     margin: 50px auto; /* Center the form on the page vertically and horizontally */
