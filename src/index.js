@@ -15,28 +15,70 @@ import Footer from "./components/footer/Footer";
 import Navbar from "./components/navbar/Navbar";
 import Settings from "./components/screens/Settings";
 import Messages from "./components/screens/Messages";
+import { UserProvider } from "../src/services/contexts/UserContext";
+import ProtectedUserRoute from "../src/services/protectedRoute/ProtectedUserRoute";
 
 ReactDOM.render(
-  <BrowserRouter>
-    <Navbar />
-    <Footer />
-    <div>
+  <UserProvider>
+    <BrowserRouter>
+      <Navbar />
       <Routes>
-        <Route path="/" element={<HomePage />} /> {/* Route for Home page */}
-        <Route path="/About_Me" element={<AboutMe />} />
-        <Route path="/Add_Donation" element={<AddDonation />} />
-        <Route path="/Connect_Us" element={<ConnectUs />} />
-        <Route path="/Donations_Search" element={<SearchDonations />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/Log_In" element={<LogIn />} />
-        <Route path="/Registertion" element={<Registertion />} />
-        <Route path="/Settings" element={<Settings />} />
-        <Route path="/Messages" element={<Messages />} />
-        <Route path="*" element={<NotFound />} />{" "}
-        {/* Route for handling 404 errors */}
+        <Route path="/Registration" element={<Registertion />} />
+
+        <Route
+          path="/About_Me"
+          element={
+            <ProtectedUserRoute>
+              <AboutMe />
+            </ProtectedUserRoute>
+          }
+        />
+        <Route
+          path="/Add_Donation"
+          element={
+            <ProtectedUserRoute>
+              <AddDonation />
+            </ProtectedUserRoute>
+          }
+        />
+        <Route
+          path="/Connect_Us"
+          element={
+            <ProtectedUserRoute>
+              <ConnectUs />
+            </ProtectedUserRoute>
+          }
+        />
+        <Route
+          path="/Donations_Search"
+          element={
+            <ProtectedUserRoute>
+              <SearchDonations />
+            </ProtectedUserRoute>
+          }
+        />
+        <Route
+          path="/Settings"
+          element={
+            <ProtectedUserRoute>
+              <Settings />
+            </ProtectedUserRoute>
+          }
+        />
+        <Route
+          path="/Messages"
+          element={
+            <ProtectedUserRoute>
+              <Messages />
+            </ProtectedUserRoute>
+          }
+        />
+        <Route path="*" element={<NotFound />} />
       </Routes>
-    </div>
-  </BrowserRouter>,
+      <Footer />
+    </BrowserRouter>
+  </UserProvider>,
   document.getElementById("root")
 );
-
-reportWebVitals();

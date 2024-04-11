@@ -1,7 +1,10 @@
-import React, { useState } from "react";
-import "../screensCSS/AddDonation.css"; // Make sure the path is correct
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // For navigation
+import { useUser } from "../../services/contexts/UserContext"; // Adjust this path based on your project structure
+import "../screensCSS/AddDonation.css"; // Ensure the correct path to your CSS file
 
 function AddDonation() {
+  // State for the donation form inputs
   const [donation, setDonation] = useState({
     title: "",
     description: "",
@@ -11,6 +14,17 @@ function AddDonation() {
     imagePreview: null,
   });
 
+  const { user } = useUser(); // Accessing the current user from context
+  const navigate = useNavigate(); // Hook for navigation
+
+  // Redirect to the login page if no user is logged in
+  useEffect(() => {
+    if (!user) {
+      navigate("/Log_In");
+    }
+  }, [user, navigate]);
+
+  // Handle changes in form inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
     setDonation((prevDonation) => ({
@@ -19,8 +33,9 @@ function AddDonation() {
     }));
   };
 
+  // Handle image file selection and preview
   const handleImageChange = (e) => {
-    if (e.target.files[0]) {
+    if (e.target.files && e.target.files[0]) {
       const reader = new FileReader();
       reader.onload = (e) => {
         setDonation((prevDonation) => ({
@@ -32,112 +47,79 @@ function AddDonation() {
     }
   };
 
+  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Implement what happens when the form is submitted
     console.log(donation);
+    // Here you would typically handle the submission, like sending the data to your backend or Firebase
   };
 
   return (
     <div className="donation-page">
       <div className="donation-container">
-        <h2>Create a new donation</h2>
+        <h2>Create a New Donation</h2>
         <form onSubmit={handleSubmit} className="donation-form">
-          <div className="input-group">
+          <input
+            type="text"
+            name="title"
+            value={donation.title}
+            onChange={handleChange}
+            placeholder="Item name"
+            required
+          />
+          <select
+            name="category"
+            value={donation.category}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select a category</option>
+            {/* Add more categories as needed */}
+          </select>
+          <select
+            name="productStatus"
+            value={donation.productStatus}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select the product status</option>
+            {/* Add more options as needed */}
+          </select>
+          <select
+            name="district"
+            value={donation.district}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Choose a District</option>
+            {/* Add more districts as needed */}
+          </select>
+          <textarea
+            name="description"
+            value={donation.description}
+            onChange={handleChange}
+            placeholder="Description"
+            required
+          />
+          <label htmlFor="image-upload" className="image-upload-label">
+            Upload Image
             <input
-              type="text"
-              name="title"
-              value={donation.title}
-              onChange={handleChange}
-              placeholder="Item name"
-              className="input-field"
+              id="image-upload"
+              type="file"
+              name="image"
+              onChange={handleImageChange}
+              hidden
             />
-          </div>
-          <div className="input-group">
-            <select
-              name="category"
-              value={donation.category}
-              onChange={handleChange}
-              className="input-field"
-            >
-              <option value="">Select a category</option>
-              {/* Insert your category options here */}
-              <option value="moving">moving</option>
-              <option value="food">food</option>
-              <option value="financial Contribution">
-                financial Contribution
-              </option>
-              <option value="Equipment">Equipment</option>
-              <option value="Trump">Trump</option>
-
-              {/* Add more options as needed */}
-            </select>
-          </div>
-          <div className="productStatus">
-            <select
-              name="productStatus"
-              value={donation.productStatus}
-              onChange={handleChange}
-              className="input-field"
-            >
-              <option value="">Select the product status</option>
-              {/* Insert your type options here */}
-              <option value="new">New</option>
-              <option value="used">Used</option>
-              {/* Add more options as needed */}
-            </select>
-          </div>
-          <div className="district">
-            <select
-              name="district"
-              value={donation.district}
-              onChange={handleChange}
-              className="district"
-            >
-              <option value="">Choose a District</option>
-              {/* Insert your type options here */}
-              <option value="North district">North district</option>
-              <option value="Sout district">Sout district</option>
-              <option value="Center district">Center district</option>
-              <option value="jerusalem district">jerusalem district</option>
-              <option value="Sharon district">Sharon district</option>
-              {/* Add more options as needed */}
-            </select>
-          </div>
-          <div className="input-group">
-            <textarea
-              name="description"
-              value={donation.description}
-              onChange={handleChange}
-              placeholder="Description"
-              className="input-field"
+          </label>
+          {donation.imagePreview && (
+            <img
+              src={donation.imagePreview}
+              alt="Preview"
+              className="image-preview"
             />
-          </div>
-          <div className="input-group image-upload-group">
-            <label htmlFor="image-upload" className="image-upload-label">
-              {donation.imagePreview ? (
-                <img
-                  src={donation.imagePreview}
-                  alt="Preview"
-                  className="image-preview"
-                />
-              ) : (
-                <div className="image-upload-placeholder">
-                  <div className="image-upload-icon">+</div>
-                  <div className="image-upload-instructions">Upload Image</div>
-                </div>
-              )}
-              <input
-                id="image-upload"
-                type="file"
-                name="image"
-                onChange={handleImageChange}
-                className="image-upload-input"
-              />
-            </label>
-          </div>
+          )}
           <button type="submit" className="save-button">
-            Save
+            Save Donation
           </button>
         </form>
       </div>

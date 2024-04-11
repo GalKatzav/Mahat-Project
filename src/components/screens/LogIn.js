@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "../screensCSS/LogIn.css";
 import { firebase } from "../../services/firebase/FireStore";
 import { getDocs, collection, addDoc } from "firebase/firestore";
+import { useUser } from "../../services/contexts/UserContext"; // Adjust the import path as necessary
 
 const Login = () => {
   const [users, setUsers] = useState([]);
@@ -10,6 +11,7 @@ const Login = () => {
   const [email, setEmail] = useState(""); // Use email for login, adjust as needed if using userName
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { setUser } = useUser();
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -28,6 +30,7 @@ const Login = () => {
     );
 
     if (user) {
+      setUser({ userName: user.userName }); // Set the logged-in user's ID
       alert("Welcome!");
       navigate("/"); // Navigate to the home page or dashboard
     } else {
