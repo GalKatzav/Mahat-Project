@@ -50,12 +50,10 @@
 .nav-menu-hamburger {
   list-style-type: none;
   position: fixed; /* Display the menu as a separate window */
-  top: 55px; /* Position it at the top of the screen */
+  top: 55.7px; /* Position it at the top of the screen */
   right: 0; /* Position it at the right side of the screen */
   width: 250px; /* Fixed width for the menu */
-  height: 75vh; /* Full height of the screen */
-  /* background-color: #e6a1a8;; Background color of the menu
-   */
+  height: 73vh; /* Full height of the screen */
   overflow-y: auto; /* Allow scrolling if the content exceeds the height */
   transition: right 0.3s; /* Smooth transition effect */
   padding-top: 5px; /* Spacing at the top of the menu */
@@ -63,7 +61,7 @@
   display: flex; /* Display the items as a flex container */
   flex-direction: column; /* Align items vertically */
   justify-content: center; /* Center items horizontally */
-  background-color: rgba(230, 161, 168, 0.4);
+  background-color: rgba(183, 44, 90, 0.1);
   /* background-color: transparent; */
 }
 
