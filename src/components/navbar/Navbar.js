@@ -39,7 +39,7 @@ export default function Navbar() {
             <img
               src={icon}
               alt="logoProject"
-              style={{ width: "50px", height: "auto" }}
+              style={{ width: "100px", height: "auto" }}
             />
           </Link>
           <span className="current-time">{currentTime}</span>

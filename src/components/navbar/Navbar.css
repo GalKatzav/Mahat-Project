@@ -50,10 +50,10 @@
 .nav-menu-hamburger {
   list-style-type: none;
   position: fixed; /* Display the menu as a separate window */
-  top: 55.7px; /* Position it at the top of the screen */
+  top: 65px; /* Position it at the top of the screen */
   right: 0; /* Position it at the right side of the screen */
   width: 250px; /* Fixed width for the menu */
-  height: 73vh; /* Full height of the screen */
+  height: 71.5vh; /* Full height of the screen */
   overflow-y: auto; /* Allow scrolling if the content exceeds the height */
   transition: right 0.3s; /* Smooth transition effect */
   padding-top: 5px; /* Spacing at the top of the menu */
