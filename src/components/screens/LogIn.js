@@ -1,23 +1,42 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
-import "../screensCSS/LogIn.css"; // Ensure your CSS path is correct
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import "../screensCSS/LogIn.css";
+import { firebase } from "../../services/firebase/FireStore";
+import { getDocs, collection, addDoc } from "firebase/firestore";
 
 const Login = () => {
-  const [userName, setUsername] = useState("");
+  const [users, setUsers] = useState([]);
+  const usersCollectionReference = collection(firebase, "users");
+  const [email, setEmail] = useState(""); // Use email for login, adjust as needed if using userName
   const [password, setPassword] = useState("");
-  const navigate = useNavigate(); // Initialize the navigation hook
+  const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const querySnapshot = await getDocs(usersCollectionReference);
+      setUsers(querySnapshot.docs.map((doc) => doc.data()));
+    };
+
+    fetchUsers();
+  }, []);
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Implement your login logic here
-    console.log(userName, password);
-    // Possibly navigate to another route on successful login
-    // navigate('/dashboard'); // Example route on successful login
+    // Assuming your user documents have 'email' and 'password' fields
+    const user = users.find(
+      (user) => user.email === email && user.password === password
+    );
+
+    if (user) {
+      alert("Welcome!");
+      navigate("/"); // Navigate to the home page or dashboard
+    } else {
+      alert("Invalid login credentials."); // Handle invalid login
+    }
   };
 
-  // Function to navigate to the Registration page
   const handleRegistrationClick = () => {
-    navigate("/Registertion"); // Use the path you've set up in your Routes for the registration page
+    navigate("/Registertion"); // Ensure the path is correct for your registration page
   };
 
   return (
@@ -27,11 +46,11 @@ const Login = () => {
         <div className="input-container">
           <input
             type="text"
-            id="userName"
-            name="userName"
-            value={userName}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="userName"
+            id="email" // Changed to email for clarity; adjust as necessary
+            name="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email" // Placeholder changed to Email for clarity
             required
           />
         </div>
@@ -49,7 +68,6 @@ const Login = () => {
         <button type="submit" className="login-button">
           Login
         </button>
-        {/* Instead of a Link, use a button for registration and handle click */}
         <button
           type="button"
           className="reg-button"

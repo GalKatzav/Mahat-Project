@@ -1,11 +1,14 @@
 import React, { useState } from "react";
+import "../screensCSS/AddDonation.css"; // Make sure the path is correct
 
 function AddDonation() {
   const [donation, setDonation] = useState({
     title: "",
     description: "",
-    amount: "",
-    // Include other fields as necessary
+    district: "",
+    category: "",
+    productStatus: "",
+    imagePreview: null,
   });
 
   const handleChange = (e) => {
@@ -16,94 +19,125 @@ function AddDonation() {
     }));
   };
 
+  const handleImageChange = (e) => {
+    if (e.target.files[0]) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setDonation((prevDonation) => ({
+          ...prevDonation,
+          imagePreview: e.target.result,
+        }));
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission, like sending data to a server
+    // Implement what happens when the form is submitted
     console.log(donation);
   };
 
   return (
-    <div
-      style={{
-        background: "url(../../images/createDonPic.jpg)",
-        backgroundSize: "cover",
-        padding: "20px",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        height: "100vh",
-      }}
-    >
-      <div
-        style={{
-          width: "600px",
-          background: "rgba(255, 255, 255, 0.8)",
-          padding: "20px",
-          borderRadius: "8px",
-          boxShadow: "0 0 10px rgba(0, 0, 0, 0.7)",
-        }}
-      >
-        <h2 style={{ textAlign: "center", color: "#333" }}>יצירת תרומה חדשה</h2>
-        <form
-          onSubmit={handleSubmit}
-          style={{ display: "flex", flexDirection: "column" }}
-        >
-          <div style={{ marginBottom: "15px" }}>
+    <div className="donation-page">
+      <div className="donation-container">
+        <h2>Create a new donation</h2>
+        <form onSubmit={handleSubmit} className="donation-form">
+          <div className="input-group">
             <input
               type="text"
               name="title"
               value={donation.title}
               onChange={handleChange}
-              placeholder="כותרת"
-              style={{
-                width: "100%",
-                padding: "10px",
-                borderRadius: "4px",
-                border: "1px solid #ccc",
-                marginBottom: "10px",
-              }}
+              placeholder="Item name"
+              className="input-field"
             />
+          </div>
+          <div className="input-group">
+            <select
+              name="category"
+              value={donation.category}
+              onChange={handleChange}
+              className="input-field"
+            >
+              <option value="">Select a category</option>
+              {/* Insert your category options here */}
+              <option value="moving">moving</option>
+              <option value="food">food</option>
+              <option value="financial Contribution">
+                financial Contribution
+              </option>
+              <option value="Equipment">Equipment</option>
+              <option value="Trump">Trump</option>
+
+              {/* Add more options as needed */}
+            </select>
+          </div>
+          <div className="productStatus">
+            <select
+              name="productStatus"
+              value={donation.productStatus}
+              onChange={handleChange}
+              className="input-field"
+            >
+              <option value="">Select the product status</option>
+              {/* Insert your type options here */}
+              <option value="new">New</option>
+              <option value="used">Used</option>
+              {/* Add more options as needed */}
+            </select>
+          </div>
+          <div className="district">
+            <select
+              name="district"
+              value={donation.district}
+              onChange={handleChange}
+              className="district"
+            >
+              <option value="">Choose a District</option>
+              {/* Insert your type options here */}
+              <option value="North district">North district</option>
+              <option value="Sout district">Sout district</option>
+              <option value="Center district">Center district</option>
+              <option value="jerusalem district">jerusalem district</option>
+              <option value="Sharon district">Sharon district</option>
+              {/* Add more options as needed */}
+            </select>
+          </div>
+          <div className="input-group">
             <textarea
               name="description"
               value={donation.description}
               onChange={handleChange}
-              placeholder="תיאור"
-              style={{
-                width: "100%",
-                padding: "10px",
-                borderRadius: "4px",
-                border: "1px solid #ccc",
-                height: "100px",
-              }}
+              placeholder="Description"
+              className="input-field"
             />
           </div>
-          <div style={{ marginBottom: "15px" }}>
-            <input
-              type="text"
-              name="amount"
-              value={donation.amount}
-              onChange={handleChange}
-              placeholder="סכום התרומה"
-              style={{
-                width: "100%",
-                padding: "10px",
-                borderRadius: "4px",
-                border: "1px solid #ccc",
-              }}
-            />
+          <div className="input-group image-upload-group">
+            <label htmlFor="image-upload" className="image-upload-label">
+              {donation.imagePreview ? (
+                <img
+                  src={donation.imagePreview}
+                  alt="Preview"
+                  className="image-preview"
+                />
+              ) : (
+                <div className="image-upload-placeholder">
+                  <div className="image-upload-icon">+</div>
+                  <div className="image-upload-instructions">Upload Image</div>
+                </div>
+              )}
+              <input
+                id="image-upload"
+                type="file"
+                name="image"
+                onChange={handleImageChange}
+                className="image-upload-input"
+              />
+            </label>
           </div>
-          <button
-            type="submit"
-            style={{
-              width: "100%",
-              padding: "10px",
-              backgroundColor: "#d17485",
-              color: "white",
-              borderRadius: "4px",
-              cursor: "pointer",
-            }}
-          >
-            שמור
+          <button type="submit" className="save-button">
+            Save
           </button>
         </form>
       </div>
