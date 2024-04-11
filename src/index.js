@@ -25,7 +25,7 @@ ReactDOM.render(
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/Log_In" element={<LogIn />} />
-        <Route path="/Registration" element={<Registertion />} />
+        <Route path="/Registertion" element={<Registertion />} />
 
         <Route
           path="/About_Me"

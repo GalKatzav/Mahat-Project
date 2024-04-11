@@ -1,60 +1,142 @@
+/* Navbar styling */
 .navbar {
-    background-color: #e6a1a8; /* Adjust the color to match the image */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    font-family: 'Arial', sans-serif; /* Adjust the font family as needed */
-  }
-  
+  background-color: #e6a1a8; /* Adjust the color to match your theme */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  font-family: 'Arial', sans-serif;
+}
+
+.logo-and-time, .navbar-main-links {
+  display: flex;
+  align-items: center;
+}
+
+.hamburger {
+  display: block; /* Always display the hamburger icon */
+  cursor: pointer; /* Changes the cursor to indicate it's clickable */
+}
+
+.nav-menu, .navbar-main-links {
+  list-style-type: none;
+  gap: 10px; /* Space between menu items */
+  margin: 0;
+  padding: 0;
+}
+
+.nav-link, .logout-button {
+  text-decoration: none;
+  font-weight: bold;
+  color: white;
+  font-size: 11px;
+  background-color: #d17485;
+  border-radius: 20px;
+  padding: 10px 20px;
+  border: none; /* No border for the logout button */
+  transition: background-color 0.3s; /* Smooth background color transition on hover */
+}
+
+.nav-link:hover, .logout-button:hover {
+  background-color: #bb5d6d; /* Darkens the button on hover */
+}
+
+.current-time {
+  font-size: 18px;
+  color: white;
+  padding-left: 20px;
+}
+
+.nav-menu-hamburger {
+  list-style-type: none;
+  position: fixed; /* Display the menu as a separate window */
+  top: 55px; /* Position it at the top of the screen */
+  right: 0; /* Position it at the right side of the screen */
+  width: 250px; /* Fixed width for the menu */
+  height: 75vh; /* Full height of the screen */
+  /* background-color: #e6a1a8;; Background color of the menu
+   */
+  overflow-y: auto; /* Allow scrolling if the content exceeds the height */
+  transition: right 0.3s; /* Smooth transition effect */
+  padding-top: 5px; /* Spacing at the top of the menu */
+  z-index: 1000; /* Ensure it's above other content */
+  display: flex; /* Display the items as a flex container */
+  flex-direction: column; /* Align items vertically */
+  justify-content: center; /* Center items horizontally */
+  background-color: rgba(230, 161, 168, 0.4);
+  /* background-color: transparent; */
+}
+
+/* Style when the menu is open */
+.nav-menu-hamburger.open {
+  right: 0; /* Slide the menu to the right when open */
+}
+
+.nav-link-hamburger {
+  text-decoration: none;
+  font-weight: bold;
+  color: white;
+  font-size: 11px;
+  background-color: #d17485;
+  border-radius: 20px;
+  padding: 10px 20px;
+  display: block; /* Display each link as a separate block */
+  transition: background-color 0.3s; /* Smooth button transition */
+  margin-bottom: 10px; /* Add space between buttons */
+}
+
+.nav-link-hamburger:hover {
+  background-color: #bb5d6d; /* Change background color on hover */
+}
+
+.logout-button-hamburger {
+  background-color: #d17485; /* Green color for login button */
+}
+
+.nav-link-hamburger-in {
+  text-decoration: none;
+  font-weight: bold;
+  color: rgb(0, 0, 0);
+  font-size: 11px;
+  border-radius: 20px;
+  padding: 10px 20px;
+  display: block; /* Display each link as a separate block */
+  transition: background-color 0.3s; /* Smooth button transition */
+  margin-bottom: 10px; /* Add space between buttons */
+  background-color: #a8ddc3; /* Green color for login button */
+}
+
+
+.logout-button-hamburger:hover {
+  background-color: #bb5d6d; /* Darkens the button on hover */
+}
+
+/* Responsive design adjustments */
+@media (max-width: 768px) {
   .nav-menu {
-    list-style-type: none;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 5px;
-    margin: 0;
-    padding: 0; /* Ensure there's no padding affecting the alignment */
+    display: none; /* Initially hidden */
+    flex-direction: column;
+    position: fixed; /* Changed from absolute to fixed */
+    top: 0; /* Starts from the very top */
+    right: 0; /* Align to the right */
+    height: 100vh; /* Full screen height */
+    width: 100%; /* Full width */
+    background-color: #e6a1a8; /* Matches the navbar background */
+    align-items: center; /* Center items vertically */
+    justify-content: start; /* Align items to start from top */
+    padding-top: 60px; /* Space from top */
+    z-index: 10; /* Make sure it's above other content */
   }
-  
-  .nav-link {
-    text-decoration: none;
-    font-weight: bold;
-    border: 1.5px solid white;
-    color: white; /* Change the text color to white */
-    font-size: 11px;
-    background-color: #d17485; /* Adjust button background to match the image */
-    border-radius: 20px; /* Round the edges of the buttons */
-    padding: 10px 20px; /* Adjust padding to better fit the content */
-    transition: background-color 0.3s; /* Smooth transition for hover effect */
+
+  .nav-menu.open {
+    display: flex; /* Display when the menu is toggled open */
   }
-  
-  .nav-link:hover {
-    background-color: #bb5d6d; /* Darken button background on hover */
+
+  .hamburger {
+    z-index: 11; /* Ensures hamburger is above the nav-menu */
   }
-  
-  .current-time {
-    font-size: 18px;
-    color: white; /* Change the text color to white */
-    margin-left: auto; /* This will push the current time to the edge */
-    padding-left: 20px; /* Add some padding to not stick to the edge */
-  }
-  
-  .logo {
-    display: flex;
-    align-items: center;
-  }
-  
-  .logo img {
-    width: 100px; /* Adjust the logo size to match the navbar height */
-    height: auto;
-    margin-right: 10px; /* Adjust spacing to your preference */
-  }
-  
-  /* Add responsiveness - collapse nav-menu items into a dropdown or hide on smaller screens */
-  @media (max-width: 768px) {
-    .nav-menu {
-      display: none;
-      /* Alternatively, you can change this to display:block and style it as a dropdown */
-  }
+
+  .navbar-main-links {
+    display: none; /* Ensures main links are hidden in small screens */
+}
 }
