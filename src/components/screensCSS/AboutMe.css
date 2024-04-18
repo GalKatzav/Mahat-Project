@@ -1,19 +1,33 @@
 .about-me-container {
-    background-color: #f8d7da; /* Pick the exact pink shade from your design */
-    font-family: 'Arial', sans-serif;
-    padding: 20px;
-  }
-  
-  .about-me-content {
-    max-width: 800px; /* Adjust width as needed */
-    margin: auto;
-    background-color: #ffffff; /* Assuming a white content background */
-    padding: 20px;
-    border-radius: 10px; /* Rounded corners */
-  }
-  
-  .about-me-images img {
-    width: 100%; /* Full width images */
-    margin-top: 20px; /* Space between text and images */
-    border-radius: 10px; /* Rounded corners for images */
-    }
+  background-color: #f8d7da; /* Fallback color */
+  font-family: 'Arial', sans-serif;
+  padding: 10px;
+  padding-bottom: 150px;
+  display: flex; /* Use flexbox to align content to the right */
+  justify-content: flex-end; /* Aligns content to the right */
+  background: url('../../images/AboutMePic.jpg') no-repeat center center;
+  height: calc(100vh - 70px); /* Full height minus padding */
+  overflow: hidden; /* Hide any overflow */
+  background-size: 1275px; /* This will set the width of the image to 1275px */
+}
+
+.about-me-content {
+  max-width: 700px; /* Max width for the text */
+  background-color: #ffffff;
+  padding: 20px;
+  margin-left: 15%; /* Adjust this as necessary */
+  border-radius: 10px;
+  display: flex; /* Enables flexbox */
+  flex-direction: column; /* Stacks children vertically */
+  justify-content: center; /* Centers children vertically */
+  align-items: center; /* Centers children horizontally */
+  height: calc(100vh - 200px); /* Adjust height based on your navbar and padding */
+}
+
+.about-me-content h1,
+.about-me-content p {
+  text-align: center; /* Centers the text within the heading and paragraph */
+  width: 100%; /* Full width to take up the container width */
+}
+
+
