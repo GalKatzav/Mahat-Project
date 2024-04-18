@@ -1,0 +1,62 @@
+.connectUs {
+    background-image: url('../../images/connectUs.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 50px; /* Adjust padding as needed */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center content vertically */
+    height: 100vh;
+  }
+  
+  .contact-container {
+    display: flex;
+    justify-content: space-around; /* Evenly space out the form and contact info */
+    align-items: flex-start; /* Align items to the top */
+    width: 100%; /* Full width of the parent */
+    max-width: 1200px; /* Adjust max-width as needed */
+    background: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add some shadow for depth */
+  }
+  
+  h1 {
+    color: #34495e; /* Adjust color as needed */
+    margin-bottom: 20px; /* Spacing below the title */
+  }
+  
+  .contact-form, .contact-info {
+    width: 45%; /* Adjust width as needed */
+  }
+  
+  .contact-form label {
+    display: block;
+    margin-bottom: 10px; /* Spacing between labels and inputs */
+  }
+  
+  .contact-form input, .contact-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px; /* Spacing between each input */
+    border: 1px solid #ccc;
+    border-radius: 5px; /* Rounded borders */
+  }
+  
+  .contact-form button {
+    padding: 10px 20px;
+    background-color: #34495e; /* Adjust button color as needed */
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .contact-info ul {
+    list-style-type: none;
+    padding-left: 0; /* Remove default padding */
+  }
+  
+  .contact-info ul li {
+    padding: 5px 0; /* Spacing between contact info items */
+  }
+  

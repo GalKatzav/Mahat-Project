@@ -1,0 +1,19 @@
+.about-me-container {
+    background-color: #f8d7da; /* Pick the exact pink shade from your design */
+    font-family: 'Arial', sans-serif;
+    padding: 20px;
+  }
+  
+  .about-me-content {
+    max-width: 800px; /* Adjust width as needed */
+    margin: auto;
+    background-color: #ffffff; /* Assuming a white content background */
+    padding: 20px;
+    border-radius: 10px; /* Rounded corners */
+  }
+  
+  .about-me-images img {
+    width: 100%; /* Full width images */
+    margin-top: 20px; /* Space between text and images */
+    border-radius: 10px; /* Rounded corners for images */
+    }

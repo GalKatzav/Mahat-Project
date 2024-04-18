@@ -1,0 +1,95 @@
+/* Settings.css */
+
+.profile-settings {
+  background: #fcdede; /* Light pink background */
+  font-family: 'Arial', sans-serif;
+  padding: 20px;
+  direction: rtl; /* For Hebrew text */
+}
+
+.profile-settings form {
+  background: #ffe3e3; /* Slightly darker pink background for the form */
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-control {
+  margin-bottom: 20px;
+}
+
+.form-control label {
+  display: block;
+  margin-bottom: 5px;
+  color: #333; /* Dark text for better contrast */
+}
+
+.form-control input[type="text"],
+.form-control input[type="email"],
+.form-control input[type="password"],
+.form-control input[type="tel"] {
+  width: calc(100% - 20px);
+  padding: 10px;
+  border: 1px solid #ffadad; /* Light red border */
+  border-radius: 10px;
+  direction: ltr; /* Inputs usually expect LTR input */
+}
+
+.form-control input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+.form-control button {
+  background-color: #ff8282; /* Reddish button color */
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* Enhance input fields on focus */
+.form-control input[type="text"]:focus,
+.form-control input[type="email"]:focus,
+.form-control input[type="password"]:focus,
+.form-control input[type="tel"]:focus {
+outline: none;
+border: 2px solid #ff6565; /* A slightly darker shade for focus */
+}
+
+/* Hover state for buttons */
+.form-control button:hover {
+background-color: #ff6565; /* A lighter shade when hovered */
+}
+
+/* Style for the checkbox label when the mouse hovers over */
+.form-control.checkbox label:hover {
+cursor: pointer;
+}
+
+/* Checkbox customization */
+.form-control.checkbox input[type="checkbox"] {
+accent-color: #ff8282; /* Change checkbox color */
+}
+
+/* Focus state for the checkbox */
+.form-control.checkbox input[type="checkbox"]:focus {
+outline: none;
+box-shadow: 0 0 3pt 2pt #ffadad; /* Glow effect for focus */
+}
+
+/* Change text color slightly on input focus for better visibility */
+.form-control input[type="text"]:focus,
+.form-control input[type="email"]:focus,
+.form-control input[type="password"]:focus,
+.form-control input[type="tel"]:focus {
+color: #000;
+}
+
+/* Add a transition to smooth out the focus and hover effects */
+.form-control input,
+.form-control button {
+transition: border 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+}

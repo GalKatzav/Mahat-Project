@@ -28,7 +28,7 @@ export default function Navbar() {
   const handleLogout = () => {
     setUser(null);
     localStorage.removeItem("user");
-    navigate("/Log_In");
+    navigate("/");
   };
 
   return (
@@ -105,13 +105,14 @@ export default function Navbar() {
               </Link>
             </li>
             {user ? (
-              <li className="nav-link-hamburger">
-                <button
+              <li>
+                <Link
+                  to="/"
+                  className="nav-link-hamburger"
                   onClick={handleLogout}
-                  className="nav-link btn btn-outline-secondary"
                 >
                   Logout
-                </button>
+                </Link>
               </li>
             ) : (
               <li>
