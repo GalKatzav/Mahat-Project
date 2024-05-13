@@ -1,0 +1,95 @@
+/* Basic styles for the site */
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+
+}
+
+/* Updated CSS for organization details view */
+.org-details {
+  position: absolute; /* Changed from fixed to absolute within the container */
+  top: 10px; /* Added top margin for spacing */
+  bottom: 15px; /* Added bottom space to not overlap the footer */
+  left: 10%;
+  transform: translateX(-50%);
+  width: 80%; /* Adjusted width if needed */
+  max-height: calc(100% - 90px); /* Adjust height calculation to ensure it doesn't overlap the footer */
+  overflow-y: auto; /* Add scroll inside the org-details if content is too long */
+  background-color: #fff;
+  padding: 20px;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  z-index: 1000; /* Ensure it's above other content but below modal/popups if any */
+  padding-top: 50px;
+  height: 58vh;
+}
+
+/* Ensuring container allows internal elements to position absolutely */
+.container {
+  position: relative; /* This ensures absolute positioning within the container */
+  min-height: 100vh; /* Minimum height to accommodate full page even if content is less */
+  padding: 20px; /* Space around content inside the container */
+  padding-bottom: 110px; /* Increased bottom padding to accommodate footer height */
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .org-details {
+    width: 100%; /* Full width on smaller screens */
+    top: 10px; /* Smaller top margin on mobile */
+    bottom: 70px; /* Enough space to avoid footer overlap */
+    left: 0;
+    transform: none; /* No need to translate as it's full width */
+  }
+}
+
+
+/* Organization cards container */
+.org-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  padding: 20px;
+  gap: 20px;
+  margin-bottom: 20px; /* Ensure there's space before the footer */
+}
+
+/* Styling for each organization in the list */
+.org-entry {
+  background-color: #e0e0e0;
+  cursor: pointer;
+  border-radius: 5px;
+  padding: 10px;
+  width: calc(33.333% - 40px); /* Three items per row with spacing */
+  box-sizing: border-box;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+/* Centered styling for detailed organization view */
+.centered {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  max-height: calc(100% - 120px);
+  overflow-y: auto;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+/* Responsive design adjustments */
+@media (max-width: 768px) {
+  .org-entry {
+    width: 100%; /* Full width for mobile devices */
+  }
+}
+
+

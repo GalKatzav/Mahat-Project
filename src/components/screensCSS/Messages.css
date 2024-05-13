@@ -1,0 +1,105 @@
+/* עיצוב כללי */
+body, h1, p {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  /* עיצוב התפריט העליון */
+  .header {
+    background-color: #e6a1a8;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+  }
+  
+  .header h1 {
+    font-size: 24px; /* גודל הכותרת */
+  }
+  
+  .header ul {
+    list-style: none;
+    display: flex;
+    gap: 20px; /* מרווח בין פריטי התפריט */
+  }
+  
+  .header li {
+    padding: 5px 10px;
+    border-radius: 10px; /* פינות מעוגלות */
+    transition: background-color 0.3s;
+  }
+  
+  .header li:hover {
+    background-color: #d17485; /* צבע עם העברת העכבר */
+  }
+  
+  /* עיצוב תיבת ההודעות */
+  #messagesContainer {
+    max-width: 600px;
+    margin: 30px auto; /* מרכוז תיבת ההודעות */
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    overflow: hidden; /* מחזיר את הגלילה ומעגל את הפינות */
+  }
+  
+  .message {
+    padding: 15px 20px;
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .message:last-child {
+    border-bottom: none; /* מוריד קו תחתון מההודעה האחרונה */
+  }
+  
+  /* עיצוב טקסט ההודעה */
+  .message-text {
+    flex-grow: 1; /* מאפשר לטקסט לתפוס את כל המקום האפשרי */
+  }
+  
+  /* עיצוב כפתורי ההודעה */
+  .message-button {
+    padding: 5px 15px;
+    border: none;
+    border-radius: 20px;
+    background-color: #d17485;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .message-button:hover {
+    background-color: #bb5d6d;
+  }
+  
+  /* עיצוב הגלילה */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+  
+  /* התאמה למסכים קטנים */
+  @media (max-width: 768px) {
+    .header ul {
+      flex-direction: column; /* פריטי תפריט אחד מתחת לשני */
+    }
+  
+    .header li {
+      margin-bottom: 10px; /* מרווח בין פריטי התפריט */
+}
+}

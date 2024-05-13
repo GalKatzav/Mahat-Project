@@ -1,95 +1,77 @@
-/* Settings.css */
-
-.profile-settings {
-  background: #fcdede; /* Light pink background */
-  font-family: 'Arial', sans-serif;
+.settings-page {
+  display: flex;
+  justify-content: center;
   padding: 20px;
-  direction: rtl; /* For Hebrew text */
+  background-color: #fcdede;
+
 }
 
-.profile-settings form {
-  background: #ffe3e3; /* Slightly darker pink background for the form */
-  max-width: 500px;
-  margin: 40px auto;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.settings-form {
+  display: flex;
+  flex-wrap: wrap; /* Allows form columns to wrap on smaller screens */
+  gap: 20px; /* Space between columns */
+  max-width: 800px; /* Adjust as needed */
+  background-color: #fcdede;
+}
+
+.settings-column {
+  flex: 1; /* Each column will take up equal space */
+  min-width: 250px; /* Minimum width for each column */
 }
 
 .form-control {
-  margin-bottom: 20px;
+  margin-bottom: 20px; /* More space between form controls */
 }
 
 .form-control label {
   display: block;
   margin-bottom: 5px;
-  color: #333; /* Dark text for better contrast */
+  text-align: left;
+  padding-right: 10px;
+  background-color: #f1d0d0; /* Darker background for labels */
+  color: black; /* Change text color for better contrast */
+  padding: 5px 10px;
+  border-radius: 5px; /* Optional: Adds rounded corners to the label backgrounds */
 }
+
 
 .form-control input[type="text"],
 .form-control input[type="email"],
 .form-control input[type="password"],
 .form-control input[type="tel"] {
-  width: calc(100% - 20px);
+  width: 100%; /* Full width of the form control */
   padding: 10px;
-  border: 1px solid #ffadad; /* Light red border */
-  border-radius: 10px;
-  direction: ltr; /* Inputs usually expect LTR input */
+  border-radius: 5px;
+  border: 1.5px solid #ccc; /* Replace with your desired border color */
 }
 
-.form-control input[type="checkbox"] {
-  margin-right: 10px;
+.checkbox-control input[type="checkbox"] {
+  margin-right: 5px; /* Aligns the checkbox with the label text */
 }
 
-.form-control button {
-  background-color: #ff8282; /* Reddish button color */
-  color: white;
+.checkbox-control label {
+  display: flex;
+  align-items: center; /* Vertically centers the checkbox with the label text */
+}
+
+.save-button {
+  padding: 10px 20px;
+  border-radius: 5px;
   border: none;
-  padding: 10px 15px;
-  border-radius: 10px;
+  background-color: #c99595; /* Replace with your desired button color */
+  color: black;
   cursor: pointer;
+  align-self: flex-end; /* Aligns the Save button to the right */
+  margin-top: -30px;
 }
 
-/* Enhance input fields on focus */
-.form-control input[type="text"]:focus,
-.form-control input[type="email"]:focus,
-.form-control input[type="password"]:focus,
-.form-control input[type="tel"]:focus {
-outline: none;
-border: 2px solid #ff6565; /* A slightly darker shade for focus */
+/* Adjustments for right-to-left (RTL) languages like Hebrew */
+[dir="rtl"] .settings-form {
+  direction: rtl;
 }
 
-/* Hover state for buttons */
-.form-control button:hover {
-background-color: #ff6565; /* A lighter shade when hovered */
-}
-
-/* Style for the checkbox label when the mouse hovers over */
-.form-control.checkbox label:hover {
-cursor: pointer;
-}
-
-/* Checkbox customization */
-.form-control.checkbox input[type="checkbox"] {
-accent-color: #ff8282; /* Change checkbox color */
-}
-
-/* Focus state for the checkbox */
-.form-control.checkbox input[type="checkbox"]:focus {
-outline: none;
-box-shadow: 0 0 3pt 2pt #ffadad; /* Glow effect for focus */
-}
-
-/* Change text color slightly on input focus for better visibility */
-.form-control input[type="text"]:focus,
-.form-control input[type="email"]:focus,
-.form-control input[type="password"]:focus,
-.form-control input[type="tel"]:focus {
-color: #000;
-}
-
-/* Add a transition to smooth out the focus and hover effects */
-.form-control input,
-.form-control button {
-transition: border 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+[dir="rtl"] .form-control label {
+  text-align: left; /* Aligns label text to the left for RTL */
+  padding-left: 10px; /* More space to the left of label for RTL */
+  padding-right: 0; /* Resets right padding for RTL */
 }
