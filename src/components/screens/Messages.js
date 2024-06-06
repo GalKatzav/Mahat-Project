@@ -1,65 +1,127 @@
-// import React, { Component } from "react";
-// import { database, auth } from "../../services/firebase/FireStore"; // אני מניח שזה הנתיב לקובץ הקונפיגורציה שלך
-// import { ref, onValue } from "../../services/firebase/database";
+import React, { useEffect, useState } from "react";
+import { firebase } from "../../services/firebase/FireStore";
+import { collection, getDocs, updateDoc, doc } from "firebase/firestore";
+import "../screensCSS/Messages.css";
+import { useUser } from "../../services/contexts/UserContext";
 
-// export default class Messages extends Component {
-//   state = {
-//     messages: [],
-//     loading: true,
-//   };
+const Messages = () => {
+  const [messages, setMessages] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [selectedMessage, setSelectedMessage] = useState(null);
+  const { user } = useUser();
+  const messagesCollectionReference = collection(firebase, "messages");
 
-//   componentDidMount() {
-//     this.checkAuthState();
-//   }
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const querySnapshot = await getDocs(messagesCollectionReference);
+        const userMessages = querySnapshot.docs
+          .map((doc) => ({ ...doc.data(), id: doc.id }))
+          .filter((message) => message.receiverId === user.id);
 
-//   checkAuthState = () => {
-//     auth.onAuthStateChanged((user) => {
-//       if (user) {
-//         this.fetchMessages(user.uid);
-//       } else {
-//         console.log("User is not signed in.");
-//         // Handle not signed in, like redirect to login page
-//       }
-//     });
-//   };
+        setMessages(userMessages);
+        setUnreadCount(userMessages.filter((message) => !message.read).length);
+      } catch (error) {
+        console.error("Error fetching messages:", error);
+      }
+    };
 
-//   fetchMessages = (userId) => {
-//     const messagesRef = ref(database, messages / $, { userId });
-//     onValue(
-//       messagesRef,
-//       (snapshot) => {
-//         const messages = snapshot.val();
-//         const messagesList = messages
-//           ? Object.keys(messages).map((key) => ({
-//               ...messages[key],
-//               id: key,
-//             }))
-//           : [];
-//         this.setState({ messages: messagesList, loading: false });
-//       },
-//       {
-//         onlyOnce: true, // If you want to listen to updates continuously remove this line
-//       }
-//     );
-//   };
+    if (user) {
+      fetchMessages();
+    }
+  }, [messagesCollectionReference, user]);
 
-//   render() {
-//     const { messages, loading } = this.state;
-//     return (
-//       <div id="messagesContainer">
-//         {loading ? (
-//           <p>Loading messages...</p>
-//         ) : messages.length > 0 ? (
-//           messages.map((message) => (
-//             <div key={message.id} className="message">
-//               {message.text}{" "}
-//               {/* Replace .text with your actual message field */}
-//             </div>
-//           ))
-//         ) : (
-//           <p>No messages found</p>
-//         )}
-//       </div>
-//     );
-//   }
-// }
+  const markAsRead = async (messageId) => {
+    const messageDoc = doc(firebase, "messages", messageId);
+    await updateDoc(messageDoc, { read: true });
+
+    setMessages((prevMessages) =>
+      prevMessages.map((msg) =>
+        msg.id === messageId ? { ...msg, read: true } : msg
+      )
+    );
+    setUnreadCount((prevCount) => prevCount - 1);
+  };
+
+  const markAsUnread = async (messageId) => {
+    const messageDoc = doc(firebase, "messages", messageId);
+    await updateDoc(messageDoc, { read: false });
+
+    setMessages((prevMessages) =>
+      prevMessages.map((msg) =>
+        msg.id === messageId ? { ...msg, read: false } : msg
+      )
+    );
+    setUnreadCount((prevCount) => prevCount + 1);
+  };
+
+  const toggleModal = (message) => {
+    if (message && !message.read) {
+      markAsRead(message.id);
+    }
+    setSelectedMessage(selectedMessage ? null : message);
+  };
+
+  return (
+    <div className="messages-container">
+      <div className="messages-header">
+        <h1>Messages</h1>
+        {unreadCount > 0 && (
+          <div className="unread-count">
+            <span>{unreadCount}</span>
+          </div>
+        )}
+      </div>
+      <div className="messages-list-wrapper">
+        <ul className="messages-list">
+          {messages.map((message) => (
+            <li
+              key={message.id}
+              className={`message-item ${message.read ? "read" : "unread"}`}
+              onClick={() => toggleModal(message)}
+            >
+              <h3>{message.subject}</h3>
+              <p>
+                {message.message.length > 50
+                  ? `${message.message.slice(0, 50)}...`
+                  : message.message}
+              </p>
+              <button
+                className="btn btn-unread"
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent triggering the modal
+                  markAsUnread(message.id);
+                }}
+              >
+                Mark as Unread
+              </button>
+              <button
+                className="btn btn-view"
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent triggering the modal
+                  toggleModal(message);
+                }}
+              >
+                View
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+      {selectedMessage && (
+        <div className="modal-overlay" onClick={() => toggleModal(null)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h2>{selectedMessage.subject}</h2>
+            <p>{selectedMessage.message}</p>
+            <button
+              className="btn btn-close"
+              onClick={() => toggleModal(null)}
+            ></button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Messages;

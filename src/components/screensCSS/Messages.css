@@ -1,105 +1,138 @@
-/* עיצוב כללי */
-body, h1, p {
-    margin: 0;
-    padding: 0;
-    font-family: 'Arial', sans-serif;
-  }
-  
-  /* עיצוב התפריט העליון */
-  .header {
-    background-color: #e6a1a8;
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 20px;
-  }
-  
-  .header h1 {
-    font-size: 24px; /* גודל הכותרת */
-  }
-  
-  .header ul {
-    list-style: none;
-    display: flex;
-    gap: 20px; /* מרווח בין פריטי התפריט */
-  }
-  
-  .header li {
-    padding: 5px 10px;
-    border-radius: 10px; /* פינות מעוגלות */
-    transition: background-color 0.3s;
-  }
-  
-  .header li:hover {
-    background-color: #d17485; /* צבע עם העברת העכבר */
-  }
-  
-  /* עיצוב תיבת ההודעות */
-  #messagesContainer {
-    max-width: 600px;
-    margin: 30px auto; /* מרכוז תיבת ההודעות */
-    border: 1px solid #ccc;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
-    overflow: hidden; /* מחזיר את הגלילה ומעגל את הפינות */
-  }
-  
-  .message {
-    padding: 15px 20px;
-    border-bottom: 1px solid #ccc;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .message:last-child {
-    border-bottom: none; /* מוריד קו תחתון מההודעה האחרונה */
-  }
-  
-  /* עיצוב טקסט ההודעה */
-  .message-text {
-    flex-grow: 1; /* מאפשר לטקסט לתפוס את כל המקום האפשרי */
-  }
-  
-  /* עיצוב כפתורי ההודעה */
-  .message-button {
-    padding: 5px 15px;
-    border: none;
-    border-radius: 20px;
-    background-color: #d17485;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .message-button:hover {
-    background-color: #bb5d6d;
-  }
-  
-  /* עיצוב הגלילה */
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 5px;
-  }
-  
-  .custom-scrollbar::-webkit-scrollbar-track {
-    background: #f1f1f1;
-  }
-  
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #888;
-  }
-  
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #555;
-  }
-  
-  /* התאמה למסכים קטנים */
-  @media (max-width: 768px) {
-    .header ul {
-      flex-direction: column; /* פריטי תפריט אחד מתחת לשני */
-    }
-  
-    .header li {
-      margin-bottom: 10px; /* מרווח בין פריטי התפריט */
+.messages-container {
+  padding: 20px;
+  background-image: url('../../images/message.jpg'); /* נתיב התמונה */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: rgba(0, 0, 0, 0.5); /* שכבה שחורה חצי שקופה */
+  background-blend-mode: overlay; /* ערבוב רקע */
+  height: 100vh; /* גובה מלא */
 }
+
+.messages-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin-top: -40px; /* מרווח מעל הכותרת */
+}
+
+.messages-header h1 {
+  color: white; /* צבע הכותרת */
+}
+
+.unread-count {
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 5px 10px;
+  position: absolute;
+  right: 10px;
+}
+
+.messages-list-wrapper {
+  max-height: 70vh;
+  overflow-y: auto;
+  margin-bottom: 200px; /* Space between the last message and the footer */
+}
+
+.messages-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.message-item {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  cursor: pointer;
+  position: relative;
+  background: rgba(255, 255, 255, 0.8); /* רקע לבן חצי שקוף להודעות */
+  margin-bottom: 10px; /* רווח בין ההודעות */
+}
+
+.message-item.unread {
+  font-weight: bold;
+}
+
+.message-item.read {
+  color: gray;
+}
+
+.message-item button {
+  margin-left: 10px;
+  padding: 5px 10px;
+  cursor: pointer;
+  display: inline-block; /* כדי שהכפתורים לא יתכווצו */
+  min-width: 100px; /* גודל מינימלי לכפתורים */
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+}
+
+.btn-unread {
+  background-color: #69b1b1;
+  color: white;
+}
+
+.btn-unread:hover {
+  background-color: #98c8ca;
+}
+
+.btn-view {
+  background-color: #77b1d8;
+  color: white;
+}
+
+.btn-view:hover {
+  background-color: #90abbd;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+  max-height: 80vh; /* הגבלת גובה המודאל */
+  overflow-y: auto; /* הוספת גלילה אנכית למודאל */
+}
+
+.btn-close {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #d17485;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-close:hover {
+  background-color: #bb5d6d;
+  transform: scale(1.05);
 }
