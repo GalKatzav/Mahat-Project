@@ -1,9 +1,9 @@
 .donation-page {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start; /* Change from center to flex-start */
   height: 100vh;
-  padding: 20px;
+  padding: 20px 20px 0 20px; /* Adjusted top padding */
   box-sizing: border-box;
   background: url('../../images/createDonPic.jpg') no-repeat center center;
   background-size: cover;
@@ -11,16 +11,15 @@
 
 .donation-container {
   width: 100%; /* Full width */
-  max-width: 600px; /* Or however wide you'd like the form to be */
-  margin: auto; /* This will center the container if it's not full width */
+  max-width: 800px; /* Adjusted width for the form */
+  margin-top: 40px; /* Add top margin to push it down slightly if needed */
   padding: 40px;
-  /* background: rgba(255, 255, 255, 0.9); */
   background: rgba(237, 213, 213, 0.9);
-
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   box-sizing: border-box;
 }
+
 
 .donation-form h2 {
   text-align: center;
@@ -29,15 +28,15 @@
 }
 
 .input-group {
-  margin-bottom: 15px;
+  margin-bottom: 20px; /* Added more space between input groups */
 }
 
 .input-field,
-.district,
-.productStatus {
+.select-field, /* Assuming you have select fields, rename if different */
+textarea {
   width: 100%; /* Full width */
   padding: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 15px; /* Increased space between inputs */
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
@@ -59,62 +58,4 @@
 
 .save-button:hover {
   background-color: #b56372; /* Darker shade for hover effect */
-}
-
-/* Image Upload Styles */
-.image-upload-group {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.image-upload-label {
-  cursor: pointer;
-  display: block; /* Make label a block element */
-  width: calc(100% - 20px); /* Full width minus the padding */
-  height: 128px; /* Adjust height as necessary */
-  margin: 0 auto; /* Center the label */
-  border-radius: 4px; /* Adjust as necessary */
-  background: #eee; /* Light gray background */
-  line-height: 128px; /* Center plus icon vertically */
-  text-align: center; /* Center plus icon horizontally */
-  position: relative;
-  overflow: hidden;
-}
-
-.image-upload-icon {
-  display: inline-block;
-  vertical-align: middle;
-  font-size: 24px; /* Adjust icon size as necessary */
-  color: #d17485; /* Icon color */
-  margin-right: 8px; /* Space between icon and text */
-}
-
-.image-upload-instructions {
-  display: inline-block;
-  vertical-align: middle;
-  font-size: 16px; /* Adjust text size as necessary */
-  color: #333;
-}
-
-.image-upload-input {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.image-preview {
-  width: 100%; /* Full width */
-  height: 100%; /* Same as label height */
-  background-size: cover;
-  background-position: center;
-  display: none; /* Initially hidden */
-}
-
-/* When an image is selected, this class can be toggled to display it */
-.image-preview-show {
-  display: block;
 }
