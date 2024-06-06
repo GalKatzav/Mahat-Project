@@ -16,7 +16,9 @@ const Login = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       const querySnapshot = await getDocs(usersCollectionReference);
-      setUsers(querySnapshot.docs.map((doc) => doc.data()));
+      setUsers(
+        querySnapshot.docs.map((doc) => ({ docId: doc.id, ...doc.data() }))
+      ); // Save Firebase document ID
     };
 
     fetchUsers();
@@ -30,7 +32,8 @@ const Login = () => {
     );
 
     if (user) {
-      setUser({ userName: user.userName }); // Set the logged-in user's ID
+      console.log("Logged in user Firebase document ID:", user.docId); // Debug log
+      setUser({ id: user.docId, userName: user.userName }); // Set the logged-in user's document ID and userName
       alert("Welcome!");
       navigate("/"); // Navigate to the home page or dashboard
     } else {

@@ -3,7 +3,6 @@
   justify-content: center;
   padding: 20px;
   background-color: #fcdede;
-
 }
 
 .settings-form {
@@ -34,11 +33,11 @@
   border-radius: 5px; /* Optional: Adds rounded corners to the label backgrounds */
 }
 
-
 .form-control input[type="text"],
 .form-control input[type="email"],
 .form-control input[type="password"],
-.form-control input[type="tel"] {
+.form-control input[type="tel"],
+.form-control select {
   width: 100%; /* Full width of the form control */
   padding: 10px;
   border-radius: 5px;
