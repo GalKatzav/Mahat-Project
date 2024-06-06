@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import "../screensCSS/Registertion.css";
 import { firebase } from "../../services/firebase/FireStore";
 import { getDocs, collection, addDoc } from "firebase/firestore";
 import { useForm } from "react-hook-form";
 
 const Registration = () => {
-  const [countUsers, setCountUsers] = useState(800100);
   const {
     register,
     handleSubmit,
@@ -19,26 +18,20 @@ const Registration = () => {
   useEffect(() => {
     const getUsers = async () => {
       try {
-        const data = await getDocs(usersCollectionReference);
-        const maxId = data.docs.reduce(
-          (max, doc) => Math.max(max, doc.data().id || 0),
-          countUsers
-        );
-        setCountUsers(maxId + 1);
+        await getDocs(usersCollectionReference);
       } catch (e) {
         console.error("Cannot retrieve data from Firebase:", e);
       }
     };
     getUsers();
-  }, [countUsers, usersCollectionReference]);
+  }, [usersCollectionReference]);
 
   const createUser = async (formData) => {
     try {
-      const newUserId = countUsers;
+      const newUserId = Date.now(); // Generate unique ID using Date.now()
       const newUser = { ...formData, id: newUserId };
       const docRef = await addDoc(usersCollectionReference, newUser);
       console.log("New user created with ID:", docRef.id);
-      setCountUsers(newUserId + 1);
       reset();
     } catch (e) {
       console.error("Error adding document:", e);

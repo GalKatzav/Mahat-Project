@@ -1,62 +1,88 @@
 .connectUs {
-    background-image: url('../../images/connectUs.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    padding: 50px; /* Adjust padding as needed */
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Center content vertically */
-    height: 100vh;
-  }
-  
-  .contact-container {
-    display: flex;
-    justify-content: space-around; /* Evenly space out the form and contact info */
-    align-items: flex-start; /* Align items to the top */
-    width: 100%; /* Full width of the parent */
-    max-width: 1200px; /* Adjust max-width as needed */
-    background: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
-    padding: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add some shadow for depth */
-  }
-  
-  h1 {
-    color: #34495e; /* Adjust color as needed */
-    margin-bottom: 20px; /* Spacing below the title */
-  }
-  
-  .contact-form, .contact-info {
-    width: 45%; /* Adjust width as needed */
-  }
-  
-  .contact-form label {
-    display: block;
-    margin-bottom: 10px; /* Spacing between labels and inputs */
-  }
-  
-  .contact-form input, .contact-form textarea {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 20px; /* Spacing between each input */
-    border: 1px solid #ccc;
-    border-radius: 5px; /* Rounded borders */
-  }
-  
-  .contact-form button {
-    padding: 10px 20px;
-    background-color: #34495e; /* Adjust button color as needed */
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .contact-info ul {
-    list-style-type: none;
-    padding-left: 0; /* Remove default padding */
-  }
-  
-  .contact-info ul li {
-    padding: 5px 0; /* Spacing between contact info items */
-  }
-  
+  background-image: url('../../images/connectUs.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 50px 20px; /* Adjust padding as needed */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center content vertically */
+  min-height: 100vh; /* Ensure the container covers full viewport height */
+  justify-content: flex-start; /* Position content at the top */
+  margin-top: -75px; /* Move content higher up by 75px */
+}
+
+.contact-container {
+  display: flex;
+  justify-content: space-around; /* Evenly space out the form and contact info */
+  align-items: flex-start; /* Align items to the top */
+  width: 100%; /* Full width of the parent */
+  max-width: 1200px; /* Adjust max-width as needed */
+  background: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add some shadow for depth */
+  margin-top: 20px; /* Move form higher up */
+  margin-bottom: 75px; /* Add space below the form */
+}
+
+h1 {
+  color: #34495e; /* Adjust color as needed */
+  margin-bottom: 20px; /* Spacing below the title */
+  margin-top: 75px; /* Move title higher up by 75px */
+}
+
+.contact-form {
+  display: flex;
+  justify-content: space-between;
+  width: 70%; /* Adjust width as needed */
+}
+
+.left-column, .right-column {
+  width: 45%; /* Adjust width as needed */
+}
+
+.contact-form label {
+  display: block;
+  margin-bottom: 10px; /* Spacing between labels and inputs */
+}
+
+.contact-form input, .contact-form textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px; /* Spacing between each input */
+  border: 1px solid #ccc;
+  border-radius: 5px; /* Rounded borders */
+}
+
+.contact-form textarea {
+  height: 200px; /* Increase height for the message field */
+}
+
+.contact-form button {
+  padding: 12px 24px; /* Increase padding for a larger button */
+  background-color: #34495e; /* Adjust button color as needed */
+  color: white;
+  border: none;
+  border-radius: 5px; /* Rounded borders */
+  cursor: pointer;
+  align-self: flex-end; /* Align button to the end of the form */
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Add transition for smooth effect */
+}
+
+.contact-form button:hover {
+  background-color: #2c3e50; /* Darker shade on hover */
+  transform: scale(1.05); /* Slightly increase size on hover */
+}
+
+.contact-info ul {
+  list-style-type: none;
+  padding-left: 0; /* Remove default padding */
+}
+
+.contact-info ul li {
+  padding: 5px 0; /* Spacing between contact info items */
+}
+
+.footer-space {
+  height: 75px; /* Add this to create space between the container and the footer */
+}
