@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import reportWebVitals from "./reportWebVitals";
+// import reportWebVitals from "./reportWebVitals";
 import HomePage from "./components/screens/HomePage";
 import AboutMe from "./components/screens/AboutMe";
 import AddDonation from "./components/screens/AddDonation";

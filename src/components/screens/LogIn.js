@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../screensCSS/LogIn.css";
 import { firebase } from "../../services/firebase/FireStore";
-import { getDocs, collection, addDoc } from "firebase/firestore";
+import { getDocs, collection } from "firebase/firestore";
 import { useUser } from "../../services/contexts/UserContext"; // Adjust the import path as necessary
 
 const Login = () => {
@@ -20,7 +20,7 @@ const Login = () => {
     };
 
     fetchUsers();
-  }, []);
+  }, [usersCollectionReference]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
