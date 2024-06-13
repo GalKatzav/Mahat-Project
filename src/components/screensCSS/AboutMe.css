@@ -9,9 +9,11 @@
   height: calc(100vh - 70px); /* Full height minus padding */
   overflow: hidden; /* Hide any overflow */
   background-size: 1275px; /* This will set the width of the image to 1275px */
+  position: relative;
 }
 
 .about-me-content {
+  width: 100%;
   max-width: 700px; /* Max width for the text */
   background-color: #ffffff;
   padding: 20px;
@@ -22,6 +24,7 @@
   justify-content: center; /* Centers children vertically */
   align-items: center; /* Centers children horizontally */
   height: calc(100vh - 200px); /* Adjust height based on your navbar and padding */
+  position: relative;
 }
 
 .about-me-content h1,
@@ -30,4 +33,50 @@
   width: 100%; /* Full width to take up the container width */
 }
 
+.edit-textarea {
+  width: 100%; /* Match the width of the about-me-content */
+  max-width: 660px; /* Same as the max-width of the about-me-content minus padding */
+  height: 400px; /* Increased height */
+  padding: 20px; /* Increased padding */
+  margin-bottom: 20px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-family: 'Arial', sans-serif;
+  font-size: 16px;
+  resize: none;
+}
 
+.admin-buttons {
+  display: flex;
+  gap: 10px;
+  position: absolute;
+  top: -15px; /* Adjusted to move down */
+  left: -535px; /* Adjusted to move left */
+}
+
+.admin-buttons .edit-mode-btn, .admin-buttons .save-btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.admin-buttons .edit-mode-btn {
+  background-color: #008cba;
+  color: white;
+}
+
+.admin-buttons .edit-mode-btn:hover {
+  background-color: #007bb5;
+}
+
+.admin-buttons .save-btn {
+  background-color: #495c70;
+  color: white;
+}
+
+.admin-buttons .save-btn:hover {
+  background-color: #324254;
+}
