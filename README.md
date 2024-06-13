@@ -76,3 +76,4 @@ npm install bootstrap@5.3.3
 npm i firebase
 npm i react-firebase-hooks
 npm install react-hook-form
+npm install react-toastify

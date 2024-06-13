@@ -1,30 +1,32 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // For navigation
-import { useUser } from "../../services/contexts/UserContext"; // Adjust this path based on your project structure
-import "../screensCSS/AddDonation.css"; // Ensure the correct path to your CSS file
+import { useNavigate } from "react-router-dom";
+import { useUser } from "../../services/contexts/UserContext";
+import "../screensCSS/AddDonation.css";
+import { storage } from "../../services/firebase/FireStore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { collection, addDoc } from "firebase/firestore";
+import { firebase } from "../../services/firebase/FireStore";
 
 function AddDonation() {
-  // State for the donation form inputs
   const [donation, setDonation] = useState({
-    title: "",
+    donationName: "",
     description: "",
     district: "",
     category: "",
     productStatus: "",
     imagePreview: null,
+    imageFile: null,
   });
 
-  const { user } = useUser(); // Accessing the current user from context
-  const navigate = useNavigate(); // Hook for navigation
+  const { user } = useUser();
+  const navigate = useNavigate();
 
-  // Redirect to the login page if no user is logged in
   useEffect(() => {
     if (!user) {
       navigate("/Log_In");
     }
   }, [user, navigate]);
 
-  // Handle changes in form inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
     setDonation((prevDonation) => ({
@@ -33,25 +35,55 @@ function AddDonation() {
     }));
   };
 
-  // Handle image file selection and preview
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
       const reader = new FileReader();
       reader.onload = (e) => {
         setDonation((prevDonation) => ({
           ...prevDonation,
           imagePreview: e.target.result,
+          imageFile: file,
         }));
       };
-      reader.readAsDataURL(e.target.files[0]);
+      reader.readAsDataURL(file);
     }
   };
 
-  // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(donation);
-    // Here you would typically handle the submission, like sending the data to your backend or Firebase
+    try {
+      let imageUrl = "";
+      if (donation.imageFile) {
+        const imageRef = ref(
+          storage,
+          `donations/${Date.now()}_${donation.imageFile.name}`
+        );
+        await uploadBytes(imageRef, donation.imageFile);
+        imageUrl = await getDownloadURL(imageRef);
+      } else {
+        imageUrl = "default_image_url"; // Replace with your default image URL
+      }
+      const newDonation = {
+        category: donation.category,
+        description: donation.description,
+        district: donation.district,
+        donationId: Date.now(),
+        donationName: donation.donationName,
+        productStatus: donation.productStatus,
+        userId: user.id,
+        imageUrl,
+        createdAt: Date.now(),
+      };
+      delete newDonation.imagePreview;
+      delete newDonation.imageFile;
+      await addDoc(collection(firebase, "donations"), newDonation);
+      alert("Donation created successfully!");
+      navigate("/");
+    } catch (error) {
+      console.error("Error creating donation: ", error);
+      alert("Failed to create donation. Please try again.");
+    }
   };
 
   return (
@@ -59,67 +91,86 @@ function AddDonation() {
       <div className="donation-container">
         <h2>Create a New Donation</h2>
         <form onSubmit={handleSubmit} className="donation-form">
-          <input
-            type="text"
-            name="title"
-            value={donation.title}
-            onChange={handleChange}
-            placeholder="Item name"
-            required
-          />
-          <select
-            name="category"
-            value={donation.category}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select a category</option>
-            {/* Add more categories as needed */}
-          </select>
-          <select
-            name="productStatus"
-            value={donation.productStatus}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select the product status</option>
-            {/* Add more options as needed */}
-          </select>
-          <select
-            name="district"
-            value={donation.district}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Choose a District</option>
-            {/* Add more districts as needed */}
-          </select>
-          <textarea
-            name="description"
-            value={donation.description}
-            onChange={handleChange}
-            placeholder="Description"
-            required
-          />
-          <label htmlFor="image-upload" className="image-upload-label">
-            Upload Image
+          <div className="left-column">
+            <select
+              name="category"
+              value={donation.category}
+              onChange={handleChange}
+              required
+              className="select-field"
+            >
+              <option value="">Select a category</option>
+              <option value="Service">Service</option>
+              <option value="Food">Food</option>
+              <option value="Item">Item</option>
+              <option value="Money">Money</option>
+            </select>
             <input
-              id="image-upload"
-              type="file"
-              name="image"
-              onChange={handleImageChange}
-              hidden
+              type="text"
+              name="donationName"
+              value={donation.donationName}
+              onChange={handleChange}
+              placeholder="Item name"
+              required
+              className="input-field"
             />
-          </label>
-          {donation.imagePreview && (
-            <img
-              src={donation.imagePreview}
-              alt="Preview"
-              className="image-preview"
+            {donation.category === "Item" && (
+              <select
+                name="productStatus"
+                value={donation.productStatus}
+                onChange={handleChange}
+                required
+                className="select-field"
+              >
+                <option value="">Select the product status</option>
+                <option value="used">Used</option>
+                <option value="not used">Not Used</option>
+              </select>
+            )}
+            <select
+              name="district"
+              value={donation.district}
+              onChange={handleChange}
+              required
+              className="select-field"
+            >
+              <option value="">Choose a District</option>
+              <option value="Center District">Center District</option>
+              <option value="North District">North District</option>
+              <option value="South District">South District</option>
+              <option value="Jerusalem District">Jerusalem District</option>
+              <option value="Eilat District">Eilat District</option>
+            </select>
+          </div>
+          <div className="right-column">
+            <textarea
+              name="description"
+              value={donation.description}
+              onChange={handleChange}
+              placeholder="Description"
+              required
+              className="textarea-field"
             />
-          )}
+            <label htmlFor="image-upload" className="image-upload-label">
+              <div className="upload-icon">+</div>
+              <input
+                id="image-upload"
+                type="file"
+                name="image"
+                onChange={handleImageChange}
+                hidden
+              />
+            </label>
+            {donation.imagePreview && (
+              <img
+                src={donation.imagePreview}
+                alt="Preview"
+                className="image-preview"
+              />
+            )}
+          </div>
           <button type="submit" className="save-button">
-            Save Donation
+            SAVE
           </button>
         </form>
       </div>

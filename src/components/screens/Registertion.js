@@ -1,8 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "../screensCSS/Registertion.css";
 import { firebase } from "../../services/firebase/FireStore";
-import { getDocs, collection, addDoc } from "firebase/firestore";
+import { getDocs, collection, addDoc, query, where } from "firebase/firestore";
 import { useForm } from "react-hook-form";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 
 const Registration = () => {
   const {
@@ -12,34 +15,55 @@ const Registration = () => {
     getValues,
     reset,
   } = useForm();
-
+  const navigate = useNavigate();
   const usersCollectionReference = collection(firebase, "users");
 
-  useEffect(() => {
-    const getUsers = async () => {
-      try {
-        await getDocs(usersCollectionReference);
-      } catch (e) {
-        console.error("Cannot retrieve data from Firebase:", e);
-      }
-    };
-    getUsers();
-  }, [usersCollectionReference]);
+  const checkUserExists = async (email, userName) => {
+    const emailQuery = query(
+      usersCollectionReference,
+      where("email", "==", email)
+    );
+    const userNameQuery = query(
+      usersCollectionReference,
+      where("userName", "==", userName)
+    );
+
+    const emailSnapshot = await getDocs(emailQuery);
+    const userNameSnapshot = await getDocs(userNameQuery);
+
+    return !emailSnapshot.empty || !userNameSnapshot.empty;
+  };
 
   const createUser = async (formData) => {
     try {
-      const newUserId = Date.now(); // Generate unique ID using Date.now()
-      const newUser = { ...formData, id: newUserId };
-      const docRef = await addDoc(usersCollectionReference, newUser);
-      console.log("New user created with ID:", docRef.id);
-      reset();
+      const userExists = await checkUserExists(
+        formData.email,
+        formData.userName
+      );
+
+      if (userExists) {
+        toast.error(
+          "User with this email or username already exists. Please try again."
+        );
+      } else {
+        const newUserId = Date.now(); // Generate unique ID using Date.now()
+        const newUser = { ...formData, id: newUserId };
+        await addDoc(usersCollectionReference, newUser);
+        toast.success("New user created successfully!");
+        reset();
+        setTimeout(() => {
+          navigate("/Log_In"); // Redirect to login page after success
+        }, 2000);
+      }
     } catch (e) {
       console.error("Error adding document:", e);
+      toast.error("An error occurred while creating the user.");
     }
   };
 
   return (
     <div className="Registration">
+      <ToastContainer />
       <div className="registration-container">
         <form className="registration-form" onSubmit={handleSubmit(createUser)}>
           <h2>Create New User</h2>

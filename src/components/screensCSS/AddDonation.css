@@ -1,18 +1,18 @@
 .donation-page {
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* Change from center to flex-start */
+  align-items: flex-start;
   height: 100vh;
-  padding: 20px 20px 0 20px; /* Adjusted top padding */
+  padding: 20px 20px 0 20px;
   box-sizing: border-box;
   background: url('../../images/createDonPic.jpg') no-repeat center center;
   background-size: cover;
 }
 
 .donation-container {
-  width: 100%; /* Full width */
-  max-width: 800px; /* Adjusted width for the form */
-  margin-top: 40px; /* Add top margin to push it down slightly if needed */
+  width: 100%;
+  max-width: 1200px;
+  margin-top: 40px;
   padding: 40px;
   background: rgba(237, 213, 213, 0.9);
   border-radius: 10px;
@@ -20,6 +20,18 @@
   box-sizing: border-box;
 }
 
+.donation-form {
+  display: flex;
+  justify-content: space-between;
+  width: 100%; /* Full width */
+}
+
+.left-column,
+.right-column {
+  width: 48%; /* Adjust width for better layout */
+  display: flex;
+  flex-direction: column;
+}
 
 .donation-form h2 {
   text-align: center;
@@ -27,27 +39,53 @@
   margin-bottom: 30px;
 }
 
-.input-group {
-  margin-bottom: 20px; /* Added more space between input groups */
-}
-
 .input-field,
-.select-field, /* Assuming you have select fields, rename if different */
-textarea {
-  width: 100%; /* Full width */
-  padding: 10px;
-  margin-bottom: 15px; /* Increased space between inputs */
+.select-field,
+.textarea-field {
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 20px;
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
 }
 
+.textarea-field {
+  height: 200px;
+  resize: vertical;
+}
+
+.image-upload-label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 300px;
+  background-color: rgba(237, 213, 213, 0.9);
+  color: #d17485;
+  border: 2px dashed #d17485;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.upload-icon {
+  font-size: 48px;
+}
+
+.image-preview {
+  display: block;
+  margin-top: 20px;
+  max-width: 100%;
+  border-radius: 4px;
+}
+
 .save-button {
-  width: 100%; /* Full width */
+  width: 100%;
   padding: 15px;
   border: none;
   border-radius: 4px;
-  background-color: #d17485; /* Adjust color to match theme */
+  background-color: #d17485;
   color: white;
   font-size: 16px;
   font-weight: bold;
@@ -57,5 +95,5 @@ textarea {
 }
 
 .save-button:hover {
-  background-color: #b56372; /* Darker shade for hover effect */
+  background-color: #b56372;
 }
