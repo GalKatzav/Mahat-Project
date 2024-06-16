@@ -2,6 +2,7 @@ import React from "react";
 import "../screensCSS/Registertion.css";
 import { firebase } from "../../services/firebase/FireStore";
 import { getDocs, collection, addDoc, query, where } from "firebase/firestore";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth"; // עדכון הייבוא
 import { useForm } from "react-hook-form";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -17,6 +18,7 @@ const Registration = () => {
   } = useForm();
   const navigate = useNavigate();
   const usersCollectionReference = collection(firebase, "users");
+  const auth = getAuth();
 
   const checkUserExists = async (email, userName) => {
     const emailQuery = query(
@@ -46,9 +48,26 @@ const Registration = () => {
           "User with this email or username already exists. Please try again."
         );
       } else {
-        const newUserId = Date.now(); // Generate unique ID using Date.now()
-        const newUser = { ...formData, id: newUserId };
+        // צור משתמש חדש באמצעות Firebase Authentication
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          formData.email,
+          formData.password
+        );
+        const firebaseUser = userCredential.user;
+
+        // הוסף את המשתמש ל-Firestore
+        const newUser = {
+          ...formData,
+          id: firebaseUser.uid,
+          email: formData.email,
+          userName: formData.userName,
+          fullName: formData.fullName,
+          phone: formData.phone,
+          district: formData.district,
+        };
         await addDoc(usersCollectionReference, newUser);
+
         toast.success("New user created successfully!");
         reset();
         setTimeout(() => {

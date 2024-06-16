@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "../../services/contexts/UserContext";
-import { firebase } from "../../services/firebase/FireStore";
-import { collection, getDocs } from "firebase/firestore";
 import "./Navbar.css";
 import icon from "../../images/icon.jpg";
 
@@ -11,10 +9,8 @@ export default function Navbar() {
     new Date().toLocaleTimeString()
   );
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [unreadCount, setUnreadCount] = useState(0);
   const { user, setUser } = useUser();
   const navigate = useNavigate();
-  const messagesCollectionReference = collection(firebase, "messages");
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -23,27 +19,6 @@ export default function Navbar() {
 
     return () => clearInterval(timer);
   }, []);
-
-  useEffect(() => {
-    const fetchUnreadMessages = async () => {
-      try {
-        const querySnapshot = await getDocs(messagesCollectionReference);
-        const userMessages = querySnapshot.docs
-          .map((doc) => doc.data())
-          .filter(
-            (message) => message.receiverId === user?.id && !message.read
-          );
-
-        setUnreadCount(userMessages.length);
-      } catch (error) {
-        console.error("Error fetching messages:", error);
-      }
-    };
-
-    if (user) {
-      fetchUnreadMessages();
-    }
-  }, [messagesCollectionReference, user]);
 
   const handleToggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -74,8 +49,7 @@ export default function Navbar() {
             Home Page
           </Link>
           <Link to="/Messages" className="nav-link">
-            Messages{" "}
-            {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
+            Messages
           </Link>
           <Link to="/About_Me" className="nav-link">
             About Me
@@ -122,10 +96,7 @@ export default function Navbar() {
             </li>
             <li>
               <Link to="/Messages" className="nav-link-hamburger">
-                Messages{" "}
-                {unreadCount > 0 && (
-                  <span className="badge">{unreadCount}</span>
-                )}
+                Messages
               </Link>
             </li>
             <li>

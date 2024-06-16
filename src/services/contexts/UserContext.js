@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const UserContext = createContext(null);
 
 export const UserProvider = ({ children }) => {
-  // נסה לטעון את המשתמש מ-localStorage בעת טעינת הקומפוננטה
   const [user, setUser] = useState(() => {
     try {
       const localUser = localStorage.getItem("user");
@@ -14,7 +14,22 @@ export const UserProvider = ({ children }) => {
     }
   });
 
-  // שמירת המשתמש ב-localStorage בכל פעם שהמשתמש משתנה
+  useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      if (firebaseUser) {
+        const userData = { id: firebaseUser.uid, email: firebaseUser.email };
+        setUser(userData);
+        localStorage.setItem("user", JSON.stringify(userData));
+      } else {
+        setUser(null);
+        localStorage.removeItem("user");
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   useEffect(() => {
     try {
       if (user) {

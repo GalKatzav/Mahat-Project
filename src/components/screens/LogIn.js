@@ -1,48 +1,39 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../screensCSS/LogIn.css";
-import { firebase } from "../../services/firebase/FireStore";
-import { getDocs, collection } from "firebase/firestore";
-import { useUser } from "../../services/contexts/UserContext"; // Adjust the import path as necessary
+import { useUser } from "../../services/contexts/UserContext";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 const Login = () => {
-  const [users, setUsers] = useState([]);
-  const usersCollectionReference = collection(firebase, "users");
-  const [email, setEmail] = useState(""); // Use email for login, adjust as needed if using userName
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const { setUser } = useUser();
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      const querySnapshot = await getDocs(usersCollectionReference);
-      setUsers(
-        querySnapshot.docs.map((doc) => ({ docId: doc.id, ...doc.data() }))
-      ); // Save Firebase document ID
-    };
-
-    fetchUsers();
-  }, [usersCollectionReference]);
+  const auth = getAuth();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // Assuming your user documents have 'email' and 'password' fields
-    const user = users.find(
-      (user) => user.email === email && user.password === password
-    );
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const firebaseUser = userCredential.user;
 
-    if (user) {
-      console.log("Logged in user Firebase document ID:", user.docId); // Debug log
-      setUser({ id: user.docId, userName: user.userName }); // Set the logged-in user's document ID and userName
+      const userData = { id: firebaseUser.uid, email: firebaseUser.email };
+      setUser(userData);
+      localStorage.setItem("user", JSON.stringify(userData));
       alert("Welcome!");
-      navigate("/"); // Navigate to the home page or dashboard
-    } else {
-      alert("Invalid login credentials."); // Handle invalid login
+      navigate("/");
+    } catch (error) {
+      console.error("Error logging in:", error);
+      alert("Invalid login credentials.");
     }
   };
 
   const handleRegistrationClick = () => {
-    navigate("/Registertion"); // Ensure the path is correct for your registration page
+    navigate("/Registertion");
   };
 
   return (
@@ -51,12 +42,12 @@ const Login = () => {
         <h2>User Login</h2>
         <div className="input-container">
           <input
-            type="text"
-            id="email" // Changed to email for clarity; adjust as necessary
+            type="email"
+            id="email"
             name="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email" // Placeholder changed to Email for clarity
+            placeholder="Email"
             required
           />
         </div>
