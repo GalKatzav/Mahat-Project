@@ -15,6 +15,7 @@ function Settings() {
   });
 
   const { user } = useUser(); // Get the current user's info
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -34,6 +35,11 @@ function Settings() {
             ...prevProfile,
             ...userData,
           }));
+
+          // Check if the user is an admin
+          if (userData.userName === "Admin" && userData.fullName === "Admin") {
+            setIsAdmin(true);
+          }
         } else {
           console.error("No such document!"); // Debug log
         }
@@ -51,6 +57,29 @@ function Settings() {
       ...prevProfile,
       [name]: type === "checkbox" ? checked : value,
     }));
+  };
+
+  const handlePasswordSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (!user.id) {
+        console.error("No user ID found in user context");
+        return;
+      }
+      const userDocRef = doc(firebase, "users", user.id); // Use user ID from Firebase
+
+      // Update user document in Firebase
+      const updatedProfile = { password: profile.password };
+
+      console.log("Updating password for user ID:", user.id); // Debug log
+      console.log("Updated password data:", updatedProfile); // Debug log
+
+      await updateDoc(userDocRef, updatedProfile);
+      alert("Password updated successfully!");
+    } catch (error) {
+      console.error("Error updating password:", error); // Debug log
+      alert("Failed to update password. Please try again.");
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -89,87 +118,108 @@ function Settings() {
 
   return (
     <div className="settings-page">
-      <form onSubmit={handleSubmit} className="settings-form">
-        <div className="settings-column">
-          <div className="form-control">
-            <label htmlFor="fullName">Full Name:</label>
-            <input
-              id="fullName"
-              type="text"
-              name="fullName"
-              value={profile.fullName}
-              placeholder="Enter full name"
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-control">
-            <label htmlFor="email">Email Address:</label>
-            <input
-              id="email"
-              type="email"
-              name="email"
-              value={profile.email}
-              placeholder="Enter email address"
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-control">
-            <label htmlFor="phone">Phone Number:</label>
-            <input
-              id="phone"
-              type="tel"
-              name="phone"
-              value={profile.phone}
-              placeholder="Enter phone number"
-              onChange={handleChange}
-            />
-          </div>
-        </div>
-        <div className="settings-column">
-          <div className="form-control">
-            <label htmlFor="password">Password:</label>
-            <input
-              id="password"
-              type="password"
-              name="password"
-              value={profile.password}
-              placeholder="Enter new password"
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-control">
-            <label htmlFor="district">District:</label>
-            <select
-              id="district"
-              name="district"
-              value={profile.district}
-              onChange={handleChange}
-            >
-              <option value="">Select a district</option>
-              {districts.map((district) => (
-                <option key={district} value={district}>
-                  {district}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="form-control checkbox-control">
-            <label htmlFor="subscribe">
+      {isAdmin ? (
+        <form onSubmit={handlePasswordSubmit} className="settings-form">
+          <div className="settings-column">
+            <div className="form-control">
+              <label htmlFor="password">Password:</label>
               <input
-                id="subscribe"
-                type="checkbox"
-                name="subscribe"
-                checked={profile.subscribe}
+                id="password"
+                type="password"
+                name="password"
+                value={profile.password}
+                placeholder="Enter new password"
                 onChange={handleChange}
               />
-              Want to receive updates by SMS
-            </label>
+            </div>
+            <button type="submit" className="save-button">
+              Save
+            </button>
           </div>
-        </div>
-        <button type="submit" className="save-button">
-          Save
-        </button>
-      </form>
+        </form>
+      ) : (
+        <form onSubmit={handleSubmit} className="settings-form">
+          <div className="settings-column">
+            <div className="form-control">
+              <label htmlFor="fullName">Full Name:</label>
+              <input
+                id="fullName"
+                type="text"
+                name="fullName"
+                value={profile.fullName}
+                placeholder="Enter full name"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-control">
+              <label htmlFor="email">Email Address:</label>
+              <input
+                id="email"
+                type="email"
+                name="email"
+                value={profile.email}
+                placeholder="Enter email address"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-control">
+              <label htmlFor="phone">Phone Number:</label>
+              <input
+                id="phone"
+                type="tel"
+                name="phone"
+                value={profile.phone}
+                placeholder="Enter phone number"
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+          <div className="settings-column">
+            <div className="form-control">
+              <label htmlFor="password">Password:</label>
+              <input
+                id="password"
+                type="password"
+                name="password"
+                value={profile.password}
+                placeholder="Enter new password"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-control">
+              <label htmlFor="district">District:</label>
+              <select
+                id="district"
+                name="district"
+                value={profile.district}
+                onChange={handleChange}
+              >
+                <option value="">Select a district</option>
+                {districts.map((district) => (
+                  <option key={district} value={district}>
+                    {district}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="form-control checkbox-control">
+              <label htmlFor="subscribe">
+                <input
+                  id="subscribe"
+                  type="checkbox"
+                  name="subscribe"
+                  checked={profile.subscribe}
+                  onChange={handleChange}
+                />
+                Want to receive updates by SMS
+              </label>
+            </div>
+          </div>
+          <button type="submit" className="save-button">
+            Save
+          </button>
+        </form>
+      )}
     </div>
   );
 }

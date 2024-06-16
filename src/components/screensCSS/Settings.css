@@ -1,16 +1,23 @@
 .settings-page {
   display: flex;
   justify-content: center;
+  align-items: center; /* Center content vertically */
+  height: 100vh; /* Full height */
   padding: 20px;
   background-color: #fcdede;
+  box-sizing: border-box; /* Ensure padding is included in height calculation */
 }
 
 .settings-form {
   display: flex;
   flex-wrap: wrap; /* Allows form columns to wrap on smaller screens */
   gap: 20px; /* Space between columns */
-  max-width: 800px; /* Adjust as needed */
-  background-color: #fcdede;
+  width: 100%; /* Full width */
+  max-width: 500px; /* Adjust as needed for the form's max width */
+  background-color: #fff; /* Background color for the form */
+  padding: 20px;
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Adds a shadow around the form */
 }
 
 .settings-column {
@@ -61,7 +68,7 @@
   color: black;
   cursor: pointer;
   align-self: flex-end; /* Aligns the Save button to the right */
-  margin-top: -30px;
+  margin-top: 20px; /* Adjust margin to look good */
 }
 
 /* Adjustments for right-to-left (RTL) languages like Hebrew */
