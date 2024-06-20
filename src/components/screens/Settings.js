@@ -20,13 +20,13 @@ function Settings() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        if (!user.id) {
-          console.error("No user ID found in user context");
+        if (!user.docId) {
+          console.error("No document ID found in user context");
           return;
         }
-        console.log("User ID from context:", user.id); // Debug log
-        const userDocRef = doc(firebase, "users", user.id); // Use user ID from Firebase
-        console.log("Fetching profile for user ID:", user.id); // Debug log
+        console.log("Document ID from context:", user.docId); // Debug log
+        const userDocRef = doc(firebase, "users", user.docId); // Use document ID from context
+        console.log("Fetching profile for document ID:", user.docId); // Debug log
         const docSnap = await getDoc(userDocRef);
         if (docSnap.exists()) {
           const userData = docSnap.data();
@@ -49,7 +49,7 @@ function Settings() {
     };
 
     fetchProfile();
-  }, [user.id]); // Add user.id as dependency
+  }, [user.docId]); // Add user.docId as dependency
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -62,16 +62,16 @@ function Settings() {
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (!user.id) {
-        console.error("No user ID found in user context");
+      if (!user.docId) {
+        console.error("No document ID found in user context");
         return;
       }
-      const userDocRef = doc(firebase, "users", user.id); // Use user ID from Firebase
+      const userDocRef = doc(firebase, "users", user.docId); // Use document ID from context
 
       // Update user document in Firebase
       const updatedProfile = { password: profile.password };
 
-      console.log("Updating password for user ID:", user.id); // Debug log
+      console.log("Updating password for document ID:", user.docId); // Debug log
       console.log("Updated password data:", updatedProfile); // Debug log
 
       await updateDoc(userDocRef, updatedProfile);
@@ -85,11 +85,11 @@ function Settings() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (!user.id) {
-        console.error("No user ID found in user context");
+      if (!user.docId) {
+        console.error("No document ID found in user context");
         return;
       }
-      const userDocRef = doc(firebase, "users", user.id); // Use user ID from Firebase
+      const userDocRef = doc(firebase, "users", user.docId); // Use document ID from context
 
       // Update user document in Firebase
       const updatedProfile = { ...profile };
@@ -97,7 +97,7 @@ function Settings() {
         delete updatedProfile.password; // Don't save the password field if it's empty
       }
 
-      console.log("Updating profile for user ID:", user.id); // Debug log
+      console.log("Updating profile for document ID:", user.docId); // Debug log
       console.log("Updated profile data:", updatedProfile); // Debug log
 
       await updateDoc(userDocRef, updatedProfile);
@@ -136,6 +136,7 @@ function Settings() {
               Save
             </button>
           </div>
+          <div className="spacer"></div> {/* Spacer div for margin */}
         </form>
       ) : (
         <form onSubmit={handleSubmit} className="settings-form">
@@ -202,22 +203,11 @@ function Settings() {
                 ))}
               </select>
             </div>
-            <div className="form-control checkbox-control">
-              <label htmlFor="subscribe">
-                <input
-                  id="subscribe"
-                  type="checkbox"
-                  name="subscribe"
-                  checked={profile.subscribe}
-                  onChange={handleChange}
-                />
-                Want to receive updates by SMS
-              </label>
-            </div>
           </div>
           <button type="submit" className="save-button">
             Save
           </button>
+          <div className="spacer"></div> {/* Spacer div for margin */}
         </form>
       )}
     </div>

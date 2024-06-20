@@ -22,20 +22,21 @@ const Login = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
 
-      // חפש את המשתמש ב-Firestore לפי האימייל
+      // Fetch the user document from Firestore by email
       const q = query(collection(db, "users"), where("email", "==", email));
       const querySnapshot = await getDocs(q);
 
       if (!querySnapshot.empty) {
         const userDoc = querySnapshot.docs[0];
-        const userData = { id: userDoc.id, ...userDoc.data() };
+        const userData = { id: user.uid, docId: userDoc.id, ...userDoc.data() };
         setUser(userData);
         localStorage.setItem("user", JSON.stringify(userData));
-        console.log("User document ID:", userDoc.id); // הדפסת ה-document ID בלוג
+        console.log("User document ID:", userDoc.id); // Debug log for document ID
 
-        // חפש את ההודעות של המשתמש ושמור ב-LocalStorage
+        // Fetch user messages and store in LocalStorage
         const messagesQuery = query(
           collection(db, "messages"),
           where("receiverId", "==", userDoc.id)
