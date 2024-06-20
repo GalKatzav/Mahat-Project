@@ -6,7 +6,7 @@
   background-repeat: no-repeat;
   background-color: rgba(0, 0, 0, 0.5); /* שכבה שחורה חצי שקופה */
   background-blend-mode: overlay; /* ערבוב רקע */
-  height: 100vh; /* גובה מלא */
+  min-height: 100vh; /* גובה מלא */
 }
 
 .messages-header {
@@ -31,9 +31,9 @@
 }
 
 .messages-list-wrapper {
-  max-height: 70vh;
+  max-height: 60vh; /* Reduced height to ensure messages are not hidden by the footer */
   overflow-y: auto;
-  margin-bottom: 200px; /* Space between the last message and the footer */
+  margin-bottom: 250px; /* Space between the last message and the footer */
 }
 
 .messages-list {

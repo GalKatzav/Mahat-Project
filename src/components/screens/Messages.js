@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { firebase } from "../../services/firebase/FireStore";
-import { updateDoc, doc } from "firebase/firestore";
+import {
+  updateDoc,
+  doc,
+  onSnapshot,
+  query,
+  collection,
+  where,
+} from "firebase/firestore";
 import "../screensCSS/Messages.css";
 import { useUser } from "../../services/contexts/UserContext";
 
@@ -11,27 +18,28 @@ const Messages = () => {
   const { user } = useUser();
 
   useEffect(() => {
-    const fetchMessages = () => {
-      try {
-        const storedMessages = localStorage.getItem("messages");
-        if (storedMessages) {
-          const userMessages = JSON.parse(storedMessages).filter(
-            (message) => message.receiverId === user.id
-          );
-          setMessages(userMessages);
-          setUnreadCount(
-            userMessages.filter((message) => !message.read).length
-          );
-        }
-      } catch (error) {
-        console.error("Error fetching messages from local storage:", error);
-      }
-    };
+    if (user && user.docId) {
+      const q = query(
+        collection(firebase, "messages"),
+        where("receiverId", "==", user.docId)
+      );
 
-    if (user) {
-      fetchMessages();
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        const userMessages = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setMessages(userMessages);
+        setUnreadCount(userMessages.filter((message) => !message.read).length);
+
+        // Update local storage
+        localStorage.setItem("messages", JSON.stringify(userMessages));
+      });
+
+      // Cleanup listener on unmount
+      return () => unsubscribe();
     }
-  }, [user]);
+  }, [user, user.docId]);
 
   const markAsRead = async (messageId) => {
     const messageDoc = doc(firebase, "messages", messageId);
@@ -42,13 +50,12 @@ const Messages = () => {
         msg.id === messageId ? { ...msg, read: true } : msg
       )
     );
-    setUnreadCount((prevCount) => prevCount - 1);
 
-    // Update local storage
-    const updatedMessages = messages.map((msg) =>
-      msg.id === messageId ? { ...msg, read: true } : msg
+    // Recalculate unread count
+    setUnreadCount(
+      messages.filter((message) => !message.read && message.id !== messageId)
+        .length
     );
-    localStorage.setItem("messages", JSON.stringify(updatedMessages));
   };
 
   const markAsUnread = async (messageId) => {
@@ -60,13 +67,12 @@ const Messages = () => {
         msg.id === messageId ? { ...msg, read: false } : msg
       )
     );
-    setUnreadCount((prevCount) => prevCount + 1);
 
-    // Update local storage
-    const updatedMessages = messages.map((msg) =>
-      msg.id === messageId ? { ...msg, read: false } : msg
+    // Recalculate unread count
+    setUnreadCount(
+      messages.filter((message) => !message.read || message.id === messageId)
+        .length
     );
-    localStorage.setItem("messages", JSON.stringify(updatedMessages));
   };
 
   const toggleModal = (message) => {
