@@ -3,6 +3,13 @@ import { useNavigate } from "react-router-dom";
 import "../screensCSS/LogIn.css";
 import { useUser } from "../../services/contexts/UserContext";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -10,22 +17,41 @@ const Login = () => {
   const navigate = useNavigate();
   const { setUser } = useUser();
   const auth = getAuth();
+  const db = getFirestore();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const firebaseUser = userCredential.user;
+      await signInWithEmailAndPassword(auth, email, password);
 
-      const userData = { id: firebaseUser.uid, email: firebaseUser.email };
-      setUser(userData);
-      localStorage.setItem("user", JSON.stringify(userData));
-      alert("Welcome!");
-      navigate("/");
+      // חפש את המשתמש ב-Firestore לפי האימייל
+      const q = query(collection(db, "users"), where("email", "==", email));
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        const userDoc = querySnapshot.docs[0];
+        const userData = { id: userDoc.id, ...userDoc.data() };
+        setUser(userData);
+        localStorage.setItem("user", JSON.stringify(userData));
+        console.log("User document ID:", userDoc.id); // הדפסת ה-document ID בלוג
+
+        // חפש את ההודעות של המשתמש ושמור ב-LocalStorage
+        const messagesQuery = query(
+          collection(db, "messages"),
+          where("receiverId", "==", userDoc.id)
+        );
+        const messagesSnapshot = await getDocs(messagesQuery);
+        const messages = messagesSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        localStorage.setItem("messages", JSON.stringify(messages));
+
+        alert("Welcome!");
+        navigate("/");
+      } else {
+        alert("User not found in Firestore.");
+      }
     } catch (error) {
       console.error("Error logging in:", error);
       alert("Invalid login credentials.");

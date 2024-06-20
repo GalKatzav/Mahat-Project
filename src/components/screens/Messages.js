@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { firebase } from "../../services/firebase/FireStore";
-import { collection, getDocs, updateDoc, doc } from "firebase/firestore";
+import { updateDoc, doc } from "firebase/firestore";
 import "../screensCSS/Messages.css";
 import { useUser } from "../../services/contexts/UserContext";
 
@@ -9,27 +9,29 @@ const Messages = () => {
   const [unreadCount, setUnreadCount] = useState(0);
   const [selectedMessage, setSelectedMessage] = useState(null);
   const { user } = useUser();
-  const messagesCollectionReference = collection(firebase, "messages");
 
   useEffect(() => {
-    const fetchMessages = async () => {
+    const fetchMessages = () => {
       try {
-        const querySnapshot = await getDocs(messagesCollectionReference);
-        const userMessages = querySnapshot.docs
-          .map((doc) => ({ ...doc.data(), id: doc.id }))
-          .filter((message) => message.receiverId === user.id);
-
-        setMessages(userMessages);
-        setUnreadCount(userMessages.filter((message) => !message.read).length);
+        const storedMessages = localStorage.getItem("messages");
+        if (storedMessages) {
+          const userMessages = JSON.parse(storedMessages).filter(
+            (message) => message.receiverId === user.id
+          );
+          setMessages(userMessages);
+          setUnreadCount(
+            userMessages.filter((message) => !message.read).length
+          );
+        }
       } catch (error) {
-        console.error("Error fetching messages:", error);
+        console.error("Error fetching messages from local storage:", error);
       }
     };
 
     if (user) {
       fetchMessages();
     }
-  }, [messagesCollectionReference, user]);
+  }, [user]);
 
   const markAsRead = async (messageId) => {
     const messageDoc = doc(firebase, "messages", messageId);
@@ -41,6 +43,12 @@ const Messages = () => {
       )
     );
     setUnreadCount((prevCount) => prevCount - 1);
+
+    // Update local storage
+    const updatedMessages = messages.map((msg) =>
+      msg.id === messageId ? { ...msg, read: true } : msg
+    );
+    localStorage.setItem("messages", JSON.stringify(updatedMessages));
   };
 
   const markAsUnread = async (messageId) => {
@@ -53,6 +61,12 @@ const Messages = () => {
       )
     );
     setUnreadCount((prevCount) => prevCount + 1);
+
+    // Update local storage
+    const updatedMessages = messages.map((msg) =>
+      msg.id === messageId ? { ...msg, read: false } : msg
+    );
+    localStorage.setItem("messages", JSON.stringify(updatedMessages));
   };
 
   const toggleModal = (message) => {

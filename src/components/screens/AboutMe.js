@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import "../screensCSS/AboutMe.css"; // Ensure this is the correct path to your CSS file
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  doc,
+  onSnapshot,
+  getDoc,
+  setDoc,
+} from "firebase/firestore";
 import { useUser } from "../../services/contexts/UserContext"; // נתיב נכון לקונטקסט
 import { RxSwitch } from "react-icons/rx"; // יבוא של האייקון
 
@@ -12,33 +18,41 @@ const AboutMe = () => {
   const [newAboutText, setNewAboutText] = useState("");
 
   useEffect(() => {
-    const fetchAboutText = async () => {
-      const db = getFirestore();
-      const docRef = doc(db, "aboutMe", "aboutText");
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        setAboutText(docSnap.data().text);
+    if (!currentUser) return;
+
+    const db = getFirestore();
+    const aboutMeRef = doc(db, "aboutMe", "aboutText");
+    const userRef = doc(db, "users", currentUser.id);
+
+    const fetchInitialData = async () => {
+      const userSnap = await getDoc(userRef);
+      if (userSnap.exists()) {
+        const userData = userSnap.data();
+        if (userData.userName === "Admin" && userData.fullName === "Admin") {
+          setIsAdmin(true);
+        }
+      }
+
+      const aboutMeSnap = await getDoc(aboutMeRef);
+      if (aboutMeSnap.exists()) {
+        setAboutText(aboutMeSnap.data().text);
       } else {
         console.log("No such document!");
       }
     };
 
-    fetchAboutText();
+    fetchInitialData();
 
-    const checkAdmin = async () => {
-      if (!currentUser) return;
-      const db = getFirestore();
-      const usersRef = doc(db, "users", currentUser.id);
-      const docSnap = await getDoc(usersRef);
+    const unsubscribeAboutMe = onSnapshot(aboutMeRef, (docSnap) => {
       if (docSnap.exists()) {
-        const userData = docSnap.data();
-        if (userData.userName === "Admin" && userData.fullName === "Admin") {
-          setIsAdmin(true);
-        }
+        setAboutText(docSnap.data().text);
+      } else {
+        console.log("No such document!");
       }
-    };
+    });
 
-    checkAdmin();
+    // Cleanup the listener on component unmount
+    return () => unsubscribeAboutMe();
   }, [currentUser]);
 
   const handleEditClick = () => {
@@ -48,8 +62,8 @@ const AboutMe = () => {
 
   const handleSaveClick = async () => {
     const db = getFirestore();
-    const docRef = doc(db, "aboutMe", "aboutText");
-    await setDoc(docRef, { text: newAboutText });
+    const aboutMeRef = doc(db, "aboutMe", "aboutText");
+    await setDoc(aboutMeRef, { text: newAboutText });
     setAboutText(newAboutText);
     setEditing(false);
   };
@@ -87,3 +101,5 @@ const AboutMe = () => {
 };
 
 export default AboutMe;
+
+// Barak123!
