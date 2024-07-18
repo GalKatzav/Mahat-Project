@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../services/contexts/UserContext";
 import "../screensCSS/AddDonation.css";
-import { storage, firebase } from "../../services/firebase/FireStore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { collection, addDoc, doc, getDoc } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { storage, firebase, auth } from "../../services/firebase/FireStore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage"; 
+import { collection, addDoc } from "firebase/firestore";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function AddDonation() {
   const [donation, setDonation] = useState({
@@ -16,17 +16,37 @@ function AddDonation() {
     productStatus: "",
     imagePreview: null,
     imageFile: null,
-    imageName: null, // הוספת imageName
+    imageName: null,
   });
 
-  const { user } = useUser();
+  const { user, setUser } = useUser();
   const navigate = useNavigate();
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
-    if (!user) {
-      navigate("/Log_In");
-    }
-  }, [user, navigate]);
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setCurrentUser(currentUser);
+        setUser({
+          uid: currentUser.uid,
+          email: currentUser.email,
+          docId: currentUser.uid,
+        });
+
+        // קבלת טוקן של המשתמש והדפסתו
+        auth.currentUser.getIdToken(true).then((idToken) => {
+          console.log("User ID Token:", idToken);
+        }).catch((error) => {
+          console.error("Error getting ID token:", error);
+        });
+      } else {
+        navigate("/Log_In");
+      }
+    });
+
+    return () => unsubscribe();
+  }, [navigate, setUser]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -43,7 +63,7 @@ function AddDonation() {
         ...prevDonation,
         imagePreview: URL.createObjectURL(file),
         imageFile: file,
-        imageName: file.name, // שמירת שם הקובץ
+        imageName: file.name,
       }));
     }
   };
@@ -60,29 +80,21 @@ function AddDonation() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log("User:", user);
-      console.log("Donation:", donation);
-
-      const auth = getAuth();
-      const currentUser = auth.currentUser;
       if (!currentUser) {
+        console.error("User is not authenticated");
         throw new Error("User is not authenticated");
       }
 
-      const userDocRef = doc(collection(firebase, "users"), user.id);
-      const userDocSnapshot = await getDoc(userDocRef);
-      if (!userDocSnapshot.exists()) {
-        throw new Error("User document not found");
-      }
+      const auth = getAuth();
+      await auth.currentUser.getIdToken(true); // Get a fresh token
 
-      const userDocID = userDocSnapshot.id;
+      const userUID = currentUser.uid;
 
       let imageUrl = "";
-      let imageRef;
       if (donation.imageFile) {
-        imageRef = ref(
+        const imageRef = ref(
           storage,
-          `donations/${Date.now()}_${donation.imageFile.name}`
+          `image/${userUID}/${Date.now()}_${donation.imageFile.name}`
         );
         await uploadBytes(imageRef, donation.imageFile);
         imageUrl = await getDownloadURL(imageRef);
@@ -95,17 +107,11 @@ function AddDonation() {
         category: donation.category,
         description: donation.description,
         district: donation.district,
-        idUser: userDocID, // Use the Document ID as idUser
-        image: imageUrl, // Save the image URL
+        idUser: userUID,
+        image: imageUrl,
         productStatus: donation.productStatus,
         title: donation.title,
       };
-
-      console.log("New Donation:", newDonation);
-
-      delete newDonation.imagePreview;
-      delete newDonation.imageFile;
-      delete newDonation.imageName;
 
       await addDoc(collection(firebase, "DataDonations"), newDonation);
       alert("Donation created successfully!");

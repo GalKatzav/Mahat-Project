@@ -2,6 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "@firebase/firestore";
 import { getStorage } from "firebase/storage";
+import { getAuth } from "firebase/auth";
 // If you need analytics, you can import and initialize it when necessary
 // import { getAnalytics } from "firebase/analytics";
 
@@ -28,3 +29,4 @@ const app = initializeApp(firebaseConfig);
 
 export const firebase = getFirestore(app);
 export const storage = getStorage(app);
+export const auth = getAuth(app);

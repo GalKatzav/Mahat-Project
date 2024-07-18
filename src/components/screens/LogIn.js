@@ -4,11 +4,11 @@ import "../screensCSS/LogIn.css";
 import { useUser } from "../../services/contexts/UserContext";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import {
-  getFirestore,
   collection,
   query,
   where,
   getDocs,
+  getFirestore,
 } from "firebase/firestore";
 
 const Login = () => {
@@ -22,7 +22,11 @@ const Login = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       const user = userCredential.user;
 
       // Fetch the user document from Firestore by email

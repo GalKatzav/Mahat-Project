@@ -1,8 +1,8 @@
 import React from "react";
 import "../screensCSS/Registertion.css";
-import { firebase } from "../../services/firebase/FireStore";
-import { getDocs, collection, addDoc, query, where } from "firebase/firestore";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth"; // עדכון הייבוא
+import { firebase, auth } from "../../services/firebase/FireStore";
+import { getDocs, collection, setDoc, doc, query, where } from "firebase/firestore";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useForm } from "react-hook-form";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -18,7 +18,6 @@ const Registration = () => {
   } = useForm();
   const navigate = useNavigate();
   const usersCollectionReference = collection(firebase, "users");
-  const auth = getAuth();
 
   const checkUserExists = async (email, userName) => {
     const emailQuery = query(
@@ -48,7 +47,6 @@ const Registration = () => {
           "User with this email or username already exists. Please try again."
         );
       } else {
-        // צור משתמש חדש באמצעות Firebase Authentication
         const userCredential = await createUserWithEmailAndPassword(
           auth,
           formData.email,
@@ -56,7 +54,6 @@ const Registration = () => {
         );
         const firebaseUser = userCredential.user;
 
-        // הוסף את המשתמש ל-Firestore
         const newUser = {
           ...formData,
           id: firebaseUser.uid,
@@ -66,12 +63,12 @@ const Registration = () => {
           phone: formData.phone,
           district: formData.district,
         };
-        await addDoc(usersCollectionReference, newUser);
+        await setDoc(doc(usersCollectionReference, firebaseUser.uid), newUser);
 
         toast.success("New user created successfully!");
         reset();
         setTimeout(() => {
-          navigate("/Log_In"); // Redirect to login page after success
+          navigate("/Log_In");
         }, 2000);
       }
     } catch (e) {
@@ -87,7 +84,6 @@ const Registration = () => {
         <form className="registration-form" onSubmit={handleSubmit(createUser)}>
           <h2>Create New User</h2>
           <div className="form-columns">
-            {/* Left Column */}
             <div className="left-column">
               <div className="input-group">
                 <input
@@ -139,7 +135,6 @@ const Registration = () => {
                 )}
               </div>
             </div>
-            {/* Right Column */}
             <div className="right-column">
               <div className="input-group">
                 <input
@@ -172,7 +167,6 @@ const Registration = () => {
                   <div className="error-message">* Passwords do not match</div>
                 )}
               </div>
-              {/* District selection */}
               <div className="district-group">
                 <label>
                   <input
@@ -222,7 +216,6 @@ const Registration = () => {
               </div>
             </div>
           </div>
-          {/* Submit button */}
           <button type="submit" className="save-button">
             ADD NEW USER
           </button>

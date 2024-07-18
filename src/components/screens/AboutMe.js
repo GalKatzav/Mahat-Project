@@ -7,8 +7,8 @@ import {
   getDoc,
   setDoc,
 } from "firebase/firestore";
-import { useUser } from "../../services/contexts/UserContext"; // נתיב נכון לקונטקסט
-import { RxSwitch } from "react-icons/rx"; // יבוא של האייקון
+import { useUser } from "../../services/contexts/UserContext"; // Correct path to the context
+import { RxSwitch } from "react-icons/rx"; // Import the icon
 
 const AboutMe = () => {
   const { user: currentUser } = useUser();
@@ -18,26 +18,41 @@ const AboutMe = () => {
   const [newAboutText, setNewAboutText] = useState("");
 
   useEffect(() => {
-    if (!currentUser) return;
+    if (!currentUser) {
+      console.error("Current user is not defined");
+      return;
+    }
+
+    console.log("Current User:", currentUser); // Debug log
 
     const db = getFirestore();
-    const aboutMeRef = doc(db, "aboutMe", "aboutText");
-    const userRef = doc(db, "users", currentUser.id);
+    const aboutMeRef = doc(db, "aboutMe", "aboutText"); // Correct path
+    const userRef = doc(db, "users", currentUser.id || currentUser.uid); // Check for both id and uid
+
+    console.log("About Me Ref:", aboutMeRef); // Debug log
+    console.log("User Ref:", userRef); // Debug log
 
     const fetchInitialData = async () => {
-      const userSnap = await getDoc(userRef);
-      if (userSnap.exists()) {
-        const userData = userSnap.data();
-        if (userData.userName === "Admin" && userData.fullName === "Admin") {
-          setIsAdmin(true);
+      try {
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+          const userData = userSnap.data();
+          console.log("User Data:", userData); // Debug log
+          if (userData.userName === "admin" && userData.fullName === "admin") {
+            setIsAdmin(true);
+          }
+        } else {
+          console.log("No such user document!");
         }
-      }
 
-      const aboutMeSnap = await getDoc(aboutMeRef);
-      if (aboutMeSnap.exists()) {
-        setAboutText(aboutMeSnap.data().text);
-      } else {
-        console.log("No such document!");
+        const aboutMeSnap = await getDoc(aboutMeRef);
+        if (aboutMeSnap.exists()) {
+          setAboutText(aboutMeSnap.data().text);
+        } else {
+          console.log("No such aboutMe document!");
+        }
+      } catch (error) {
+        console.error("Error fetching initial data:", error);
       }
     };
 
@@ -62,7 +77,7 @@ const AboutMe = () => {
 
   const handleSaveClick = async () => {
     const db = getFirestore();
-    const aboutMeRef = doc(db, "aboutMe", "aboutText");
+    const aboutMeRef = doc(db, "aboutMe", "aboutText"); // Correct path
     await setDoc(aboutMeRef, { text: newAboutText });
     setAboutText(newAboutText);
     setEditing(false);
@@ -101,5 +116,3 @@ const AboutMe = () => {
 };
 
 export default AboutMe;
-
-// Barak123!
