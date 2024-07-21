@@ -50,8 +50,8 @@ function SearchDonations() {
       const usersRef = collection(db, "users");
       const q = query(
         usersRef,
-        where("userName", "==", "Admin"),
-        where("fullName", "==", "Admin")
+        where("userName", "==", "admin"),
+        where("fullName", "==", "admin")
       );
 
       try {
