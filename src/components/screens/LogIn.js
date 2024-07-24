@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState  } from "react";
 import { useNavigate } from "react-router-dom";
 import "../screensCSS/LogIn.css";
-import { useUser } from "../../services/contexts/UserContext";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { useAuth } from "../../services/contexts/AuthContext"; // ייבוא השימוש בהקשר
+import { signInWithEmailAndPassword } from "firebase/auth";
 import {
   collection,
   query,
@@ -11,13 +11,13 @@ import {
   getFirestore,
 } from "firebase/firestore";
 
-const Login = () => {
+const LogIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const { setUser } = useUser();
-  const auth = getAuth();
+  const { auth, setCurrentUser } = useAuth(); // שימוש בהקשר לאימות
   const db = getFirestore();
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -36,7 +36,7 @@ const Login = () => {
       if (!querySnapshot.empty) {
         const userDoc = querySnapshot.docs[0];
         const userData = { id: user.uid, docId: userDoc.id, ...userDoc.data() };
-        setUser(userData);
+        setCurrentUser(userData); // עדכון המשתמש המאומת בהקשר
         localStorage.setItem("user", JSON.stringify(userData));
         console.log("User document ID:", userDoc.id); // Debug log for document ID
 
@@ -127,4 +127,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LogIn;
