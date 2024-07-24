@@ -1,34 +1,50 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useRef,
+} from "react";
+import { useAuth } from "./AuthContext";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { firebase } from "../../services/firebase/FireStore"; // Adjust the path to your Firestore file
 
 const UserContext = createContext(null);
 
 export const UserProvider = ({ children }) => {
+  const { currentUser } = useAuth();
   const [user, setUser] = useState(() => {
     try {
       const localUser = localStorage.getItem("user");
-      return localUser ? JSON.parse(localUser) : null;
+      return localUser ? JSON.parse(localUser) : currentUser;
     } catch (error) {
       console.log(error);
-      return null;
+      return currentUser;
     }
   });
 
-  useEffect(() => {
-    const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      if (firebaseUser) {
-        const userData = { id: firebaseUser.uid, email: firebaseUser.email };
-        setUser(userData);
-        localStorage.setItem("user", JSON.stringify(userData));
-      } else {
-        setUser(null);
-        localStorage.removeItem("user");
-      }
-    });
+  const userFetchedRef = useRef(false);
 
-    return () => unsubscribe();
-  }, []);
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (currentUser && !userFetchedRef.current) {
+        const q = query(
+          collection(firebase, "users"),
+          where("email", "==", currentUser.email)
+        );
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          const userDoc = querySnapshot.docs[0];
+          const userData = { docId: userDoc.id, ...userDoc.data() };
+          setUser(userData);
+          localStorage.setItem("user", JSON.stringify(userData));
+        }
+      }
+    };
+
+    fetchUserData();
+  }, [currentUser]);
 
   useEffect(() => {
     try {
