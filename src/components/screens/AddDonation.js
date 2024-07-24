@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../services/contexts/UserContext";
+import { useAuth } from "../../services/contexts/AuthContext";
 import "../screensCSS/AddDonation.css";
-import { storage, firebase, auth } from "../../services/firebase/FireStore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage"; 
+import { storage, firebase } from "../../services/firebase/FireStore"; // ודא שאתה מייבא את firebase
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { collection, addDoc } from "firebase/firestore";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function AddDonation() {
   const [donation, setDonation] = useState({
@@ -19,34 +19,17 @@ function AddDonation() {
     imageName: null,
   });
 
-  const { user, setUser } = useUser();
+  const { user } = useUser();
   const navigate = useNavigate();
-  const [currentUser, setCurrentUser] = useState(null);
+  const { currentUser } = useAuth();
 
   useEffect(() => {
-    const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      if (currentUser) {
-        setCurrentUser(currentUser);
-        setUser({
-          uid: currentUser.uid,
-          email: currentUser.email,
-          docId: currentUser.uid,
-        });
-
-        // קבלת טוקן של המשתמש והדפסתו
-        auth.currentUser.getIdToken(true).then((idToken) => {
-          console.log("User ID Token:", idToken);
-        }).catch((error) => {
-          console.error("Error getting ID token:", error);
-        });
-      } else {
-        navigate("/Log_In");
-      }
-    });
-
-    return () => unsubscribe();
-  }, [navigate, setUser]);
+    console.log("User in AddDonation useEffect:", user);
+    console.log("Current user from AuthContext:", currentUser);
+    if (!user) {
+      navigate("/Log_In");
+    }
+  }, [user, currentUser, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -59,6 +42,7 @@ function AddDonation() {
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
+      console.log("File to upload:", file);
       setDonation((prevDonation) => ({
         ...prevDonation,
         imagePreview: URL.createObjectURL(file),
@@ -80,24 +64,28 @@ function AddDonation() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (!currentUser) {
+      if (!user) {
         console.error("User is not authenticated");
         throw new Error("User is not authenticated");
       }
 
-      const auth = getAuth();
-      await auth.currentUser.getIdToken(true); // Get a fresh token
+      console.log("Current user:", currentUser);
+      const token = await currentUser.getIdToken(true);
+      console.log("User token In handleSubmit:", token);
 
-      const userUID = currentUser.uid;
+      const userUID = user.id;
 
       let imageUrl = "";
       if (donation.imageFile) {
+        console.log("File to upload:", donation.imageFile);
         const imageRef = ref(
           storage,
           `image/${userUID}/${Date.now()}_${donation.imageFile.name}`
         );
+        console.log("Uploading to:", imageRef.fullPath);
         await uploadBytes(imageRef, donation.imageFile);
         imageUrl = await getDownloadURL(imageRef);
+        console.log("Image uploaded to:", imageUrl);
       } else {
         imageUrl = "default_image_url"; // Replace with your default image URL
       }
