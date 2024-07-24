@@ -30,6 +30,24 @@
   right: 10px;
 }
 
+.btn-send-message {
+  padding: 10px 20px;
+  background-color: #90ceea;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  position: fixed;
+  top: 120px; /* Adjust based on your navbar height */
+  left: 20px;
+}
+
+.btn-send-message:hover {
+  background-color: #005f8b;
+  transform: scale(1.05);
+}
+
 .messages-list-wrapper {
   max-height: 60vh; /* Reduced height to ensure messages are not hidden by the footer */
   overflow-y: auto;
@@ -135,4 +153,71 @@
 .btn-close:hover {
   background-color: #bb5d6d;
   transform: scale(1.05);
+}
+
+.form-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.form-container {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-container form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-container label {
+  margin-bottom: 5px;
+  color: black;
+}
+
+.form-container input,
+.form-container textarea,
+.form-container select {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.form-container button {
+  padding: 10px 20px;
+  margin-top: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.form-container button[type="submit"] {
+  background-color: #4caf50;
+  color: white;
+}
+
+.form-container button[type="submit"]:hover {
+  background-color: #45a049;
+}
+
+.form-container button[type="button"] {
+  background-color: #f44336;
+  color: white;
+}
+
+.form-container button[type="button"]:hover {
+  background-color: #e53935;
 }
