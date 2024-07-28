@@ -15,11 +15,14 @@ import Footer from "./components/footer/Footer";
 import Navbar from "./components/navbar/Navbar";
 import Settings from "./components/screens/Settings";
 import Messages from "./components/screens/Messages";
-import { UserProvider } from "../src/services/contexts/UserContext";
+import { AuthProvider  } from "../src/services/contexts/AuthContext";
 import ProtectedUserRoute from "../src/services/protectedRoute/ProtectedUserRoute";
+import { UserProvider } from "./services/contexts/UserContext";
+
 
 ReactDOM.render(
-  <UserProvider>
+  <AuthProvider>
+    <UserProvider>
     <BrowserRouter>
       <Navbar />
       <Routes>
@@ -79,6 +82,7 @@ ReactDOM.render(
       </Routes>
       <Footer />
     </BrowserRouter>
-  </UserProvider>,
+    </UserProvider>
+  </AuthProvider>,
   document.getElementById("root")
 );
