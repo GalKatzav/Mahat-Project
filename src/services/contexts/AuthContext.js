@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signOut  } from "firebase/auth";
 
 const AuthContext = createContext(null);
 
@@ -30,8 +30,19 @@ export const AuthProvider = ({ children }) => {
     console.log("Auth calls count:", authCallsCount); // Log to track the number of auth calls
   }, [authCallsCount]);
 
+  const logout = () => {
+    signOut(auth)
+      .then(() => {
+        setCurrentUser(null);
+        localStorage.clear();
+      })
+      .catch((error) => {
+        console.error("Error during sign out:", error);
+      });
+  };
+
   return (
-    <AuthContext.Provider value={{ currentUser, setCurrentUser, auth }}>
+    <AuthContext.Provider value={{ currentUser, setCurrentUser, auth, logout }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../screensCSS/LogIn.css";
 import { useAuth } from "../../services/contexts/AuthContext"; // ייבוא השימוש בהקשר
@@ -16,8 +16,12 @@ const LogIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const { auth, setCurrentUser } = useAuth(); // שימוש בהקשר לאימות
+  const { auth, setCurrentUser, logout } = useAuth(); // שימוש בהקשר לאימות
   const db = getFirestore();
+
+  useEffect(() => {
+    localStorage.clear();
+  }, [logout]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();

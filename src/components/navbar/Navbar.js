@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "../../services/contexts/UserContext";
 import "./Navbar.css";
 import icon from "../../images/icon.jpg";
+import { useAuth } from "../../services/contexts/AuthContext";
 
 export default function Navbar() {
   const [currentTime, setCurrentTime] = useState(
@@ -11,6 +12,7 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, setUser } = useUser();
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -28,6 +30,7 @@ export default function Navbar() {
   const handleLogout = () => {
     setUser(null);
     localStorage.removeItem("user");
+    logout();
     navigate("/");
   };
 
