@@ -1,4 +1,4 @@
-import React, { useState  } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../screensCSS/LogIn.css";
 import { useAuth } from "../../services/contexts/AuthContext"; // ייבוא השימוש בהקשר
@@ -10,6 +10,7 @@ import {
   getDocs,
   getFirestore,
 } from "firebase/firestore";
+import { fetchMessages } from "./Messages"; // ייבוא הפונקציה fetchMessages
 
 const LogIn = () => {
   const [email, setEmail] = useState("");
@@ -17,7 +18,6 @@ const LogIn = () => {
   const navigate = useNavigate();
   const { auth, setCurrentUser } = useAuth(); // שימוש בהקשר לאימות
   const db = getFirestore();
-
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -36,8 +36,9 @@ const LogIn = () => {
       if (!querySnapshot.empty) {
         const userDoc = querySnapshot.docs[0];
         const userData = { id: user.uid, docId: userDoc.id, ...userDoc.data() };
+        console.log(userData);
         setCurrentUser(userData); // עדכון המשתמש המאומת בהקשר
-        localStorage.setItem("user", JSON.stringify(userData));
+        localStorage.setItem("currentUser", JSON.stringify(userData));
         console.log("User document ID:", userDoc.id); // Debug log for document ID
 
         // Fetch user messages and store in LocalStorage
@@ -51,6 +52,19 @@ const LogIn = () => {
           ...doc.data(),
         }));
         localStorage.setItem("messages", JSON.stringify(messages));
+
+        // קריאה לפונקציה fetchMessages מ־Messages component לאחר עדכון הסטייט
+        setTimeout(() => {
+          fetchMessages(
+            userData,
+            (messages) => {
+              // עידכון מצב ההודעות במקרה הצורך
+            },
+            (unreadCount) => {
+              // עידכון מצב ההודעות שלא נקראו במקרה הצורך
+            }
+          );
+        }, 0);
 
         alert("Welcome!");
         navigate("/");
