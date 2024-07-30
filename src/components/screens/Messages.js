@@ -14,7 +14,44 @@ import {
 import "../screensCSS/Messages.css";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useUser } from "../../services/contexts/UserContext";
+import { useAuth } from "../../services/contexts/AuthContext";
+
+const fetchMessages = async (user, setMessages, setUnreadCount) => {
+  if (!user || !user.uid) {
+    console.log("No currentUser or localCurrentUser.uid, returning");
+    return;
+  }
+
+  console.log("Fetching messages for user:", user);
+
+  // Fetch messages from local storage
+  const localMessages = JSON.parse(localStorage.getItem("messages"));
+  if (localMessages) {
+    console.log("Local messages found:", localMessages);
+    setMessages(localMessages);
+    setUnreadCount(localMessages.filter((message) => !message.read).length);
+  }
+
+  const q = query(
+    collection(firebase, "messages"),
+    where("receiverId", "==", user.uid)
+  );
+  const unsubscribe = onSnapshot(q, (snapshot) => {
+    const userMessages = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    console.log("Fetched messages from Firestore:", userMessages);
+    setMessages(userMessages);
+    setUnreadCount(userMessages.filter((message) => !message.read).length);
+
+    // Update local storage
+    localStorage.setItem("messages", JSON.stringify(userMessages));
+  });
+
+  // Cleanup listener on unmount
+  return () => unsubscribe();
+};
 
 const Messages = () => {
   const [messages, setMessages] = useState([]);
@@ -28,17 +65,30 @@ const Messages = () => {
     message: "",
   });
   const [isAdmin, setIsAdmin] = useState(false);
-  const { user: currentUser } = useUser();
+  const { currentUser } = useAuth();
+  const [localCurrentUser, setLocalCurrentUser] = useState(null);
+  const [loadingUser, setLoadingUser] = useState(true);
+  const [isUserLoaded, setIsUserLoaded] = useState(false);
 
   useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("currentUser"));
+    if (storedUser) {
+      setLocalCurrentUser(storedUser);
+    }
+    setLoadingUser(false);
+  }, []);
+
+  useEffect(() => {
+    if (loadingUser) return;
     console.log("useEffect called with currentUser:", currentUser);
 
     const checkAdmin = async () => {
-      if (!currentUser) {
-        console.log("No currentUser, returning");
+      const user = currentUser || localCurrentUser;
+      if (!user) {
+        console.log("No currentUser or localCurrentUser, returning mes");
         return;
       }
-      console.log("Checking admin status for user:", currentUser);
+      console.log("Checking admin status for user:", user);
 
       const db = getFirestore();
       const usersRef = collection(db, "users");
@@ -55,7 +105,7 @@ const Messages = () => {
           console.log("Admin document ID:", adminDoc.id);
 
           // Check if the current user's document ID matches the admin document ID
-          if (adminDoc.id === currentUser.id) {
+          if (adminDoc.id === user.uid) {
             console.log("Admin user found!");
             setIsAdmin(true);
           } else {
@@ -69,47 +119,23 @@ const Messages = () => {
       }
     };
 
-    if (currentUser) {
+    if (currentUser || localCurrentUser) {
       checkAdmin();
     }
-  }, [currentUser]);
+  }, [currentUser, localCurrentUser, loadingUser]);
 
   useEffect(() => {
-    const fetchMessages = async () => {
-      if (!currentUser || !currentUser.uid) {
-        console.log("No currentUser or currentUser.uid, returning");
-        return;
-      }
+    if (loadingUser || isUserLoaded) return;
 
-      console.log("Fetching messages for currentUser:", currentUser);
+    const user = currentUser || localCurrentUser;
 
-      // Fetch messages from local storage
-      const localMessages = JSON.parse(localStorage.getItem("messages"));
-      if (localMessages) {
-        setMessages(localMessages);
-        setUnreadCount(localMessages.filter((message) => !message.read).length);
-      }
+    if (user) {
+      fetchMessages(user, setMessages, setUnreadCount);
+      setIsUserLoaded(true);
+    }
+  }, [currentUser, localCurrentUser, loadingUser, isUserLoaded]);
 
-      const q = query(
-        collection(firebase, "messages"),
-        where("receiverId", "==", currentUser.uid)
-      );
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        const userMessages = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setMessages(userMessages);
-        setUnreadCount(userMessages.filter((message) => !message.read).length);
-
-        // Update local storage
-        localStorage.setItem("messages", JSON.stringify(userMessages));
-      });
-
-      // Cleanup listener on unmount
-      return () => unsubscribe();
-    };
-
+  useEffect(() => {
     const fetchUsers = async () => {
       const querySnapshot = await getDocs(collection(firebase, "users"));
       const usersList = querySnapshot.docs.map((doc) => ({
@@ -120,12 +146,10 @@ const Messages = () => {
     };
 
     // Check if currentUser is defined in localStorage
-    const localCurrentUser = JSON.parse(localStorage.getItem("user"));
-    if (localCurrentUser) {
-      fetchMessages();
+    if (currentUser || localCurrentUser) {
       fetchUsers();
     }
-  }, [currentUser]);
+  }, [currentUser, localCurrentUser, loadingUser]);
 
   const markAsRead = async (messageId) => {
     const messageDoc = doc(firebase, "messages", messageId);
@@ -183,12 +207,20 @@ const Messages = () => {
       toast.error("User not found!");
       return;
     }
+    const user = currentUser || localCurrentUser;
+    console.log(`currentUser: ${user}`);
+    console.log(`currentUser.uid: ${user.uid}`);
+
+    if (!user || !user.uid) {
+      toast.error("Current user not authenticated!");
+      return;
+    }
     try {
       await addDoc(collection(firebase, "messages"), {
         subject: newMessage.subject,
         message: newMessage.message,
         receiverId: newMessage.to,
-        senderId: currentUser.uid,
+        senderId: user.uid,
         read: false,
         id: Date.now(),
       });
@@ -323,4 +355,4 @@ const Messages = () => {
   );
 };
 
-export default Messages;
+export { Messages as default, fetchMessages };
