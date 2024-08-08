@@ -15,6 +15,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useUser } from "../../services/contexts/UserContext"; // נתיב נכון לקונטקסט
 import { RxSwitch } from "react-icons/rx"; // יבוא של האייקון
+import { useForm } from "react-hook-form";
 
 function SearchDonations() {
   const { user: currentUser } = useUser(); // קבלת המשתמש הנוכחי מהקונטקסט
@@ -35,6 +36,11 @@ function SearchDonations() {
   });
   const [editingAssoc, setEditingAssoc] = useState(false);
   const [editingDocId, setEditingDocId] = useState(null);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
   useEffect(() => {
     console.log("useEffect called with currentUser:", currentUser);
@@ -128,7 +134,6 @@ function SearchDonations() {
   };
 
   const handleAddOrganization = async (e) => {
-    e.preventDefault();
     const db = getFirestore();
     try {
       await addDoc(collection(db, "Associations"), newAssoc);
@@ -169,6 +174,9 @@ function SearchDonations() {
         await deleteDoc(doc(db, "Associations", id));
         toast.success("Organization deleted successfully!");
         setAssociations(associations.filter((assoc) => assoc.id !== id));
+        setTimeout(() => {
+          setSelectedAssoc(null);
+        }, 1500);
       } catch (error) {
         console.error("Error deleting organization:", error);
         toast.error("Failed to delete organization.");
@@ -177,7 +185,6 @@ function SearchDonations() {
   };
 
   const handleEditOrganization = async (e) => {
-    e.preventDefault();
     const db = getFirestore();
     try {
       const orgRef = doc(db, "Associations", editingDocId);
@@ -203,6 +210,9 @@ function SearchDonations() {
         ...doc.data(),
       }));
       setAssociations(assocsArray);
+      setTimeout(() => {
+        setSelectedAssoc(null);
+      }, 1500);
     } catch (error) {
       console.error("Error updating organization:", error);
       toast.error("Failed to update organization.");
@@ -235,36 +245,12 @@ function SearchDonations() {
                 }}
               >
                 <button
-                  style={{
-                    padding: "6px 12px",
-                    fontSize: "12px",
-                    cursor: "pointer",
-                    border: "none",
-                    borderRadius: "5px",
-                    transition: "background-color 0.3s",
-                    width: "120px",
-                    margin: "0 5px",
-                    backgroundColor: "#f44336",
-                    color: "white",
-                  }}
                   className="delete-btn"
                   onClick={() => handleDeleteOrganization(selectedAssoc.id)}
                 >
                   Delete Organization
                 </button>
                 <button
-                  style={{
-                    padding: "6px 12px",
-                    fontSize: "12px",
-                    cursor: "pointer",
-                    border: "none",
-                    borderRadius: "5px",
-                    transition: "background-color 0.3s",
-                    width: "120px",
-                    margin: "0 5px",
-                    backgroundColor: "#4caf50",
-                    color: "white",
-                  }}
                   className="edit-btn"
                   onClick={() => handleEditButtonClick(selectedAssoc)}
                 >
@@ -318,21 +304,67 @@ function SearchDonations() {
         <div className="form-overlay">
           <div className="form-container">
             <form
-              onSubmit={
+              onSubmit={handleSubmit(
                 editingAssoc ? handleEditOrganization : handleAddOrganization
-              }
+              )}
             >
               <h2>
                 {editingAssoc ? "Edit Organization" : "Add New Organization"}
               </h2>
               <input
+                {...register("nameAssociations", {
+                  required: true,
+                  pattern: /^[a-zA-Z\s]*$/,
+                })}
                 type="text"
-                name="addressAssociations"
-                value={newAssoc.addressAssociations}
+                name="nameAssociations"
+                value={newAssoc.nameAssociations}
                 onChange={handleInputChange}
-                placeholder="Address"
+                placeholder="Organization Name"
                 required
               />
+              {errors.nameAssociations && (
+                <div className="error-message">
+                  * Organization name must contain only letters and spaces.
+                </div>
+              )}
+
+              <input
+                {...register("phoneAssociations", {
+                  required: true,
+                  pattern: /^[0-9]{10}$/,
+                })}
+                type="text"
+                name="phoneAssociations"
+                value={newAssoc.phoneAssociations}
+                onChange={handleInputChange}
+                placeholder="Phone"
+                required
+              />
+              {errors.phoneAssociations && (
+                <div className="error-message">
+                  * Phone number must be exactly 10 digits.
+                </div>
+              )}
+
+              <input
+                {...register("riting", {
+                  required: true,
+                  pattern: /^(?:[1-9][0-9]?|100)$/,
+                })}
+                type="text"
+                name="riting"
+                value={newAssoc.riting}
+                onChange={handleInputChange}
+                placeholder="Riting"
+                required
+              />
+              {errors.riting && (
+                <div className="error-message">
+                  * Rating must be a number between 0 and 100.
+                </div>
+              )}
+
               <select
                 name="district"
                 value={newAssoc.district}
@@ -346,6 +378,7 @@ function SearchDonations() {
                 <option value="Jerusalem District">Jerusalem District</option>
                 <option value="Eilat District">Eilat District</option>
               </select>
+
               <div className="checkbox-group">
                 <label>
                   <input
@@ -394,7 +427,13 @@ function SearchDonations() {
                   />
                   Trump
                 </label>
+                {newAssoc.donationRequest.length === 0 && (
+                  <div className="error-message">
+                    * At least one service must be selected.
+                  </div>
+                )}
               </div>
+
               <textarea
                 name="information"
                 value={newAssoc.information}
@@ -402,30 +441,7 @@ function SearchDonations() {
                 placeholder="Information"
                 required
               />
-              <input
-                type="text"
-                name="nameAssociations"
-                value={newAssoc.nameAssociations}
-                onChange={handleInputChange}
-                placeholder="Organization Name"
-                required
-              />
-              <input
-                type="text"
-                name="phoneAssociations"
-                value={newAssoc.phoneAssociations}
-                onChange={handleInputChange}
-                placeholder="Phone"
-                required
-              />
-              <input
-                type="text"
-                name="riting"
-                value={newAssoc.riting}
-                onChange={handleInputChange}
-                placeholder="Riting"
-                required
-              />
+
               <button type="submit">
                 {editingAssoc ? "Update Organization" : "Add Organization"}
               </button>
@@ -436,6 +452,7 @@ function SearchDonations() {
           </div>
         </div>
       )}
+
       <div className={`org-list ${showForm ? "blurred" : ""}`}>
         {associations.map((assoc) => (
           <div

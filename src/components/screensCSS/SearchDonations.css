@@ -38,6 +38,8 @@ body, html {
   display: flex;
   flex-direction: column;
   text-align: center; /* Center text horizontally */
+  align-items: center; /* Center elements horizontally */
+  padding-top: 15px;
 }
 
 /* Ensuring container allows internal elements to position absolutely */
@@ -127,17 +129,25 @@ body, html {
 }
 
 .edit-mode-btn.active {
-  background-color: #95d49a; /* Green color when active */
+  background-color: #5e5959; /* Green color when active */
 }
 
 .add-org-btn {
-  background-color: #6ab1c9;
+  background-color: #509784;
   color: white;
 }
 
 .add-org-btn:hover {
-  background-color: #007bb5;
+  background-color: #2a433e;
 }
+
+.error-message {
+  color: red;
+  font-size: 0.875rem;
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
+
 
 .admin-buttons {
   display: flex;
@@ -169,7 +179,7 @@ body, html {
   border-radius: 5px;
   transition: background-color 0.3s;
   width: 120px; /* הגדרת הרוחב של הכפתור */
-  background-color: #f44336;
+  background-color: #652a25;
   color: white;
   margin: 0 5px;
   justify-content: center;
@@ -188,23 +198,24 @@ body, html {
   border-radius: 5px;
   transition: background-color 0.3s;
   width: 120px; /* הגדרת הרוחב של הכפתור */
-  background-color: #4caf50;
+  background-color: #4c7192;
   color: white;
   margin: 0 5px;
 }
 
 .edit-btn:hover {
-  background-color: #45a049;
+  background-color: #5facd3;
 }
 
 .admin-buttons-wrapper {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start; /* Align buttons to the left */
+  gap: 10px;
+  width: 100%;
   position: absolute;
-  margin-top: auto; /* דוחף את הכפתורים לתחתית המיכל */
-  padding-top: 20px;
-  margin-bottom: 20px;
+  top: 20px; /* Adjust as needed */
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 /* Form overlay */
