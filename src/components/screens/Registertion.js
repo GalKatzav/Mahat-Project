@@ -1,7 +1,14 @@
 import React from "react";
 import "../screensCSS/Registertion.css";
 import { firebase, auth } from "../../services/firebase/FireStore";
-import { getDocs, collection, setDoc, doc, query, where } from "firebase/firestore";
+import {
+  getDocs,
+  collection,
+  setDoc,
+  doc,
+  query,
+  where,
+} from "firebase/firestore";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useForm } from "react-hook-form";
 import { toast, ToastContainer } from "react-toastify";
@@ -68,7 +75,7 @@ const Registration = () => {
         toast.success("New user created successfully!");
         reset();
         setTimeout(() => {
-          navigate("/Log_In");
+          navigate("/");
         }, 2000);
       }
     } catch (e) {
