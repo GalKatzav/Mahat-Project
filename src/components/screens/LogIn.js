@@ -25,6 +25,19 @@ const LogIn = () => {
     localStorage.clear();
   }, [logout]);
 
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      localStorage.clear();
+      localStorage.removeItem("currentUser");
+      localStorage.removeItem("user");
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [logout]);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {

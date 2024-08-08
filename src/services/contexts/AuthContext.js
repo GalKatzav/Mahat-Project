@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { getAuth, onAuthStateChanged, signOut  } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signOut} from "firebase/auth";
 
 const AuthContext = createContext(null);
 
@@ -29,6 +29,17 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     console.log("Auth calls count:", authCallsCount); // Log to track the number of auth calls
   }, [authCallsCount]);
+
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      localStorage.clear();
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
 
   const logout = () => {
     signOut(auth)
