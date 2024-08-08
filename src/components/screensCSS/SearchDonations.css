@@ -28,8 +28,16 @@ body, html {
   border: 1px solid #ccc;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 1000;
-  max-height: 80%;
-  overflow-y: auto;
+  max-height: 60%; /* הגדרת גובה מקסימלי כדי לאפשר גלילה אנכית */
+  overflow-y: auto; /* הוספת גלילה אנכית */
+  overflow-x: hidden; /* הסתרת גלילה אופקית */
+  width: 80%; /* הגדלת הרוחב של החלונית */
+  max-width: 600px; /* הגדרת רוחב מקסימלי לחלונית */
+  position: relative; /* Ensure it's positioned properly */
+  margin: auto; /* מרכז את החלונית באמצע המסך */
+  display: flex;
+  flex-direction: column;
+  text-align: center; /* Center text horizontally */
 }
 
 /* Ensuring container allows internal elements to position absolutely */
@@ -135,33 +143,68 @@ body, html {
   display: flex;
   gap: 10px;
   margin-top: 10px;
+  justify-content: center; /* יישור הכפתורים למרכז */
+  position: absolute; /* Positioning the buttons */
+  bottom: 20px; /* Positioning at the bottom */
+  left: 50%; /* Centering horizontally */
+  transform: translateX(-50%);
 }
 
 .admin-buttons button {
-  padding: 8px 16px;
-  font-size: 14px;
+  padding: 6px 12px; /* Smaller padding for smaller buttons */
+  font-size: 12px;
   cursor: pointer;
   border: none;
   border-radius: 5px;
   transition: background-color 0.3s;
+  width: auto;
+  max-width: 150px;
 }
 
-.admin-buttons .delete-btn {
+.delete-btn {
+  padding: 6px 12px; /* Smaller padding for smaller buttons */
+  font-size: 12px; /* Smaller font size */
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+  width: 120px; /* הגדרת הרוחב של הכפתור */
   background-color: #f44336;
   color: white;
+  margin: 0 5px;
+  justify-content: center;
+  text-align: center;
 }
 
-.admin-buttons .delete-btn:hover {
+.delete-btn:hover {
   background-color: #e53935;
 }
 
-.admin-buttons .edit-btn {
+.edit-btn {
+  padding: 6px 12px; /* Smaller padding for smaller buttons */
+  font-size: 12px; /* Smaller font size */
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+  width: 120px; /* הגדרת הרוחב של הכפתור */
   background-color: #4caf50;
   color: white;
+  margin: 0 5px;
 }
 
-.admin-buttons .edit-btn:hover {
+.edit-btn:hover {
   background-color: #45a049;
+}
+
+.admin-buttons-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  margin-top: auto; /* דוחף את הכפתורים לתחתית המיכל */
+  padding-top: 20px;
+  margin-bottom: 20px;
 }
 
 /* Form overlay */
