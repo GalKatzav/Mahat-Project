@@ -14,6 +14,7 @@ import { useForm } from "react-hook-form";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import CryptoJS from "crypto-js";
 
 const Registration = () => {
   const {
@@ -25,6 +26,7 @@ const Registration = () => {
   } = useForm();
   const navigate = useNavigate();
   const usersCollectionReference = collection(firebase, "users");
+  const encryptionKey = '123';
 
   const checkUserExists = async (email, userName) => {
     const emailQuery = query(
@@ -61,6 +63,12 @@ const Registration = () => {
         );
         const firebaseUser = userCredential.user;
 
+        // Encrypt the password before saving
+        const encryptedPassword = CryptoJS.AES.encrypt(
+          formData.password,
+          encryptionKey
+        ).toString();
+
         const newUser = {
           ...formData,
           id: firebaseUser.uid,
@@ -69,6 +77,7 @@ const Registration = () => {
           fullName: formData.fullName,
           phone: formData.phone,
           district: formData.district,
+          password: encryptedPassword,
         };
         await setDoc(doc(usersCollectionReference, firebaseUser.uid), newUser);
 

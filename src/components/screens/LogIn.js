@@ -11,6 +11,7 @@ import {
   getFirestore,
 } from "firebase/firestore";
 import { fetchMessages } from "./Messages"; // ייבוא הפונקציה fetchMessages
+import CryptoJS from "crypto-js";
 
 const LogIn = () => {
   const [email, setEmail] = useState("");
@@ -18,6 +19,7 @@ const LogIn = () => {
   const navigate = useNavigate();
   const { auth, setCurrentUser, logout } = useAuth(); // שימוש בהקשר לאימות
   const db = getFirestore();
+  const encryptionKey = "123";
 
   useEffect(() => {
     localStorage.clear();
@@ -40,38 +42,47 @@ const LogIn = () => {
       if (!querySnapshot.empty) {
         const userDoc = querySnapshot.docs[0];
         const userData = { id: user.uid, docId: userDoc.id, ...userDoc.data() };
-        console.log(userData);
-        setCurrentUser(userData); // עדכון המשתמש המאומת בהקשר
-        localStorage.setItem("currentUser", JSON.stringify(userData));
-        console.log("User document ID:", userDoc.id); // Debug log for document ID
 
-        // Fetch user messages and store in LocalStorage
-        const messagesQuery = query(
-          collection(db, "messages"),
-          where("receiverId", "==", userDoc.id)
-        );
-        const messagesSnapshot = await getDocs(messagesQuery);
-        const messages = messagesSnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        localStorage.setItem("messages", JSON.stringify(messages));
+        // Decrypt the password from Firestore
+        const bytes = CryptoJS.AES.decrypt(userData.password, encryptionKey);
+        const decryptedPassword = bytes.toString(CryptoJS.enc.Utf8);
 
-        // קריאה לפונקציה fetchMessages מ־Messages component לאחר עדכון הסטייט
-        setTimeout(() => {
-          fetchMessages(
-            userData,
-            (messages) => {
-              // עידכון מצב ההודעות במקרה הצורך
-            },
-            (unreadCount) => {
-              // עידכון מצב ההודעות שלא נקראו במקרה הצורך
-            }
+        if (password === decryptedPassword) {
+          console.log(userData);
+          setCurrentUser(userData); // עדכון המשתמש המאומת בהקשר
+          localStorage.setItem("currentUser", JSON.stringify(userData));
+          console.log("User document ID:", userDoc.id); // Debug log for document ID
+
+          // Fetch user messages and store in LocalStorage
+          const messagesQuery = query(
+            collection(db, "messages"),
+            where("receiverId", "==", userDoc.id)
           );
-        }, 0);
+          const messagesSnapshot = await getDocs(messagesQuery);
+          const messages = messagesSnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          localStorage.setItem("messages", JSON.stringify(messages));
 
-        alert("Welcome!");
-        navigate("/");
+          // קריאה לפונקציה fetchMessages מ־Messages component לאחר עדכון הסטייט
+          setTimeout(() => {
+            fetchMessages(
+              userData,
+              (messages) => {
+                // עידכון מצב ההודעות במקרה הצורך
+              },
+              (unreadCount) => {
+                // עידכון מצב ההודעות שלא נקראו במקרה הצורך
+              }
+            );
+          }, 0);
+
+          alert("Welcome!");
+          navigate("/");
+        } else {
+          alert("Invalid login credentials.");
+        }
       } else {
         alert("User not found in Firestore.");
       }
