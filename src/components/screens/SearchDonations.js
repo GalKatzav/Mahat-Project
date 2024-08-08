@@ -223,8 +223,55 @@ function SearchDonations() {
         <div className="overlay" onClick={() => toggleOpen(selectedAssoc)}>
           <div
             className="org-details centered"
-            onClick={() => toggleOpen(selectedAssoc)}
+            onClick={(e) => e.stopPropagation()}
           >
+            {isAdmin && editMode && (
+              <div
+                className="admin-buttons-wrapper"
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  marginBottom: "20px",
+                }}
+              >
+                <button
+                  style={{
+                    padding: "6px 12px",
+                    fontSize: "12px",
+                    cursor: "pointer",
+                    border: "none",
+                    borderRadius: "5px",
+                    transition: "background-color 0.3s",
+                    width: "120px",
+                    margin: "0 5px",
+                    backgroundColor: "#f44336",
+                    color: "white",
+                  }}
+                  className="delete-btn"
+                  onClick={() => handleDeleteOrganization(selectedAssoc.id)}
+                >
+                  Delete Organization
+                </button>
+                <button
+                  style={{
+                    padding: "6px 12px",
+                    fontSize: "12px",
+                    cursor: "pointer",
+                    border: "none",
+                    borderRadius: "5px",
+                    transition: "background-color 0.3s",
+                    width: "120px",
+                    margin: "0 5px",
+                    backgroundColor: "#4caf50",
+                    color: "white",
+                  }}
+                  className="edit-btn"
+                  onClick={() => handleEditButtonClick(selectedAssoc)}
+                >
+                  Edit Organization
+                </button>
+              </div>
+            )}
             <h1>{selectedAssoc.nameAssociations}</h1>
             <p>Information: {selectedAssoc.information}</p>
             <p>Donation Requests: {selectedAssoc.donationRequest.join(", ")}</p>
@@ -232,21 +279,10 @@ function SearchDonations() {
             <p>Address: {selectedAssoc.addressAssociations}</p>
             <p>Phone: {selectedAssoc.phoneAssociations}</p>
             <p>Riting: {selectedAssoc.riting}</p>
-            {isAdmin && (
-              <div className="admin-buttons">
-                <button
-                  onClick={() => handleDeleteOrganization(selectedAssoc.id)}
-                >
-                  Delete Organization
-                </button>
-                <button onClick={() => handleEditButtonClick(selectedAssoc)}>
-                  Edit Organization
-                </button>
-              </div>
-            )}
           </div>
         </div>
       )}
+
       {isAdmin && (
         <div className="admin-controls">
           <button
