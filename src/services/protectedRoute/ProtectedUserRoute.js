@@ -1,8 +1,8 @@
 // src/services/protectedRoute/ProtectedUserRoute.js
 
-import React from 'react';
-import { Navigate } from 'react-router-dom';
-import { useUser } from '../contexts/UserContext'; // Update the import path as needed
+import React from "react";
+import { Navigate } from "react-router-dom";
+import { useUser } from "../contexts/UserContext"; // Update the import path as needed
 
 const ProtectedUserRoute = ({ children }) => {
   const { user } = useUser();
