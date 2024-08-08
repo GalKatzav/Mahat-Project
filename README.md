@@ -77,3 +77,4 @@ npm i firebase
 npm i react-firebase-hooks
 npm install react-hook-form
 npm install react-toastify
+npm install bcryptjs
